@@ -1,5 +1,7 @@
-[gd_scene format=3 uid="uid://btwtvrx7mxkrs"]
+[gd_scene format=3 uid="uid://dtxhiovxwwh0q"]
 
 [node name="Node2D" type="Node2D"]
 
 [node name="BOI" type="CharacterBody2D" parent="."]
+
+[node name="NOOOOOOOODDEEEE" type="Node2D" parent="."]
