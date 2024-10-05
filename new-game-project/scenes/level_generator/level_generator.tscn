@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://d4cggb2eydk77"]
+
+[ext_resource type="Script" path="res://scenes/level_generator/level_generator.gd" id="1_ygctg"]
+[ext_resource type="Texture2D" uid="uid://dl6mv1vgpxsri" path="res://assets/simple_tiles/simple_tiles.png" id="2_rf268"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hyi85"]
+texture = ExtResource("2_rf268")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_xejo1"]
+sources/0 = SubResource("TileSetAtlasSource_hyi85")
+
+[node name="levelGen" type="Node2D"]
+script = ExtResource("1_ygctg")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_set = SubResource("TileSet_xejo1")
