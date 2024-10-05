@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://nrtd32g467au"]
+
+[ext_resource type="PackedScene" uid="uid://nsyjrhc8v01u" path="res://scenes/gridsystem/grid_system.tscn" id="1_mppkf"]
+[ext_resource type="PackedScene" uid="uid://boafweukv20g8" path="res://entities/player/player.tscn" id="2_iquky"]
+
+[node name="Level" type="Node2D"]
+
+[node name="GridSystem" parent="." instance=ExtResource("1_mppkf")]
+grid_width = 40
+grid_height = 40
+
+[node name="Player" parent="GridSystem" instance=ExtResource("2_iquky")]
+gridPosition = Vector2(10, 10)
+available_move_targets_text = "--x-x
+-----
+x-o-x
+-----
+--x--"

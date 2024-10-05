@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=3 uid="uid://boafweukv20g8"]
+
+[ext_resource type="Script" path="res://entities/player/player.gd" id="1_ghvvm"]
+[ext_resource type="Texture2D" uid="uid://bsykiu4gj8gx0" path="res://assets/characters/frog/frog.png" id="2_dp5wq"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2c0x3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_dp5wq")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_go6pq"]
+size = Vector2(16, 16)
+
+[node name="Player" type="CharacterBody2D"]
+input_pickable = true
+script = ExtResource("1_ghvvm")
+available_move_targets_text = "--x--
+-----
+x-o-x
+-----
+--x--"
+
+[node name="CanvasGroup" type="CanvasGroup" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CanvasGroup"]
+position = Vector2(8, 8)
+sprite_frames = SubResource("SpriteFrames_2c0x3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(8, 8)
+shape = SubResource("RectangleShape2D_go6pq")
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]
