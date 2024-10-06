@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 GlobalTypes="*res://globals/global_types.gd"
 GlobalUtil="*res://globals/global_util.gd"
+Controller="*res://globals/controller.gd"
 
 [display]
 
