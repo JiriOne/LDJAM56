@@ -85,6 +85,20 @@ func _ready() -> void:
 						# Clear the inside of the room
 						tile_map_layer.set_cell(Vector2i(room_locations[i].x + x, room_locations[i].y + y), 0, Vector2i(1, 0))
 	
+	for i in len(room_locations):
+		if rng.randf() < 0.5:
+			#add random tiles to make the room look more interesting
+			var water_loc = Vector2(rng.randi_range(0,room_sizes[i].x) + room_locations[i].x,rng.randi_range(0,room_sizes[i].y) + room_locations[i].y)
+			var water_radius = rng.randi_range(2,5)
+			for xx in range(room_sizes[i].x):
+				for yy in range(room_sizes[i].y):
+					var curr_loc = Vector2(xx + room_locations[i].x,yy + room_locations[i].y)
+					if water_loc.distance_to(curr_loc) < water_radius:
+						#check if the tile is not a wall
+						if tile_map_layer.get_cell_atlas_coords(curr_loc) != Vector2i(2,0):
+							print(tile_map_layer.get_cell_atlas_coords(curr_loc))
+							tile_map_layer.set_cell(curr_loc,0,Vector2i(0,0))
+
 	#TODO:
 		"""
 		- remve duplicate tiles

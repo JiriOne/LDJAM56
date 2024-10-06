@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://d4cggb2eydk77"]
 
 [ext_resource type="Script" path="res://scenes/level_generator/level_generator.gd" id="1_ygctg"]
-[ext_resource type="Texture2D" uid="uid://dl6mv1vgpxsri" path="res://assets/simple_tiles/simple_tiles.png" id="2_rf268"]
+[ext_resource type="Texture2D" uid="uid://2rqoeou1d07j" path="res://assets/simple_tiles/simple_tiles.png" id="2_rf268"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hyi85"]
 texture = ExtResource("2_rf268")
