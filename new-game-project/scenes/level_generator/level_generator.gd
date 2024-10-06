@@ -175,7 +175,13 @@ func _ready() -> void:
 						free = false
 			if free:
 				_create_dual_puzzle(key_pos/16)
-		
+	
+	
+	for i in range(len(room_locations)):
+		var player = preload("res://entities/frog/frog.tscn").instantiate()
+		player.position = room_locations[i]*16 + round(room_sizes[i] / 2 + Vector2(rng.randi_range(-3,3), rng.randi_range(-3,3))) *16
+		player.gridPosition = player.position/16
+		grid_system.add_child(player)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

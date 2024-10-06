@@ -52,6 +52,22 @@ func _ready() -> void:
 	available_targets = translate_targets(available_targets_text)
 
 func _physics_process(delta: float) -> void:
+	
+	#check if close to player in party and if so, join the party
+	if self not in Controller.party:
+		var closest_party_member = null
+		var closest_party_member_dist = 99999999
+		
+		for member in Controller.party:
+			var tmp_dist = member.position.distance_to(self.position)
+			if tmp_dist < closest_party_member_dist and member != self:
+				closest_party_member = member
+				closest_party_member_dist = tmp_dist
+		
+		if closest_party_member_dist < 96:
+			Controller.party.append(self)
+			
+	
 	match current_state:
 		self.State.MOVING_TO_ENEMY:
 			position = lerp(position, current_attack_pos, 0.1 * delta * pos_before_move.distance_to(current_attack_pos))
@@ -139,6 +155,7 @@ func end_attack(target_grid_pos) -> void:
 func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT and current_state == State.IDLE and turn_taken == false and controller.player_turn == true:
+			print()
 			var plys = get_tree().get_nodes_in_group("player_character")
 			for ply in plys:
 				if ply == self:
