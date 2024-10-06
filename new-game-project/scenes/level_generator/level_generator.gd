@@ -1,4 +1,6 @@
 extends Node2D
+
+@onready var grid_system = $"../GridSystem"
 @onready var tile_map_layer: TileMapLayer = $TileMapLayer
 var rng = RandomNumberGenerator.new()
 
@@ -8,6 +10,7 @@ func _manhattan_distance(a: Vector2, b: Vector2) -> float:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	await grid_system.grid_initialized
 	var location = Vector2(0,0)
 	randomize()
 	for i in range(100):	
@@ -41,6 +44,7 @@ func _ready() -> void:
 				# Set the walls
 				if x == 0 or y == 0 or x == room_size.x - 1 or y == room_size.y - 1:
 					tile_map_layer.set_cell(Vector2i(room_location.x + x, room_location.y + y), 0, Vector2i(2, 0))
+					grid_system.set_cell_type(Vector2(room_location.x + x, room_location.y + y), GlobalTypes.Cell_Type.WALL)
 				else:
 					# Clear the inside of the room
 					tile_map_layer.set_cell(Vector2i(room_location.x + x, room_location.y + y), 0, Vector2i(1, 0))
@@ -96,7 +100,6 @@ func _ready() -> void:
 					if water_loc.distance_to(curr_loc) < water_radius:
 						#check if the tile is not a wall
 						if tile_map_layer.get_cell_atlas_coords(curr_loc) != Vector2i(2,0):
-							print(tile_map_layer.get_cell_atlas_coords(curr_loc))
 							tile_map_layer.set_cell(curr_loc,0,Vector2i(0,0))
 
 	#TODO:

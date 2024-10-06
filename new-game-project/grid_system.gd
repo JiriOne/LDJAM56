@@ -30,7 +30,10 @@ func update_cell(data : GridCellData) -> void:
 		return
 	grid[data.pos.x][data.pos.y] = data
 
-
+func set_cell_type(pos, type) -> void:
+	var data = get_cell_data(pos)
+	data.type = type
+	update_cell(data)
 
 func calc_valid_targets(origin, targets : Array[Vector2], conditional : Callable) -> Array[GridCellData]:
 	var result : Array[GridCellData] = []
@@ -40,13 +43,21 @@ func calc_valid_targets(origin, targets : Array[Vector2], conditional : Callable
 			printerr("WARNING: Found calculating target outside of grid")
 			return []
 		var cell : GridCellData = get_cell_data(target)
-		if conditional.call(cell):
+		if conditional.call(cell, target):
 			result.append(cell)
 	return result
 
 func calc_valid_move_targets(origin, move_targets : Array[Vector2]) -> Array[GridCellData]:
-	return calc_valid_targets(origin, move_targets, func(cell): return cell.type == GlobalTypes.Cell_Type.GROUND and not cell.has_enemy)
+	return calc_valid_targets(origin, move_targets, func(cell, target):
+		var dir = ceil((target - origin).normalized())
+		var step_pos : Vector2 = origin + dir
+		var trace_positions = []
+		while step_pos != target:
+			trace_positions.append(step_pos)
+			step_pos = step_pos + dir
+		return trace_positions.all(func(pos): return get_cell_data(pos).type == GlobalTypes.Cell_Type.GROUND) and cell.type == GlobalTypes.Cell_Type.GROUND and not cell.has_enemy
+	)
 
 func calc_valid_attack_targets(origin, attack_targets : Array[Vector2]) -> Array[GridCellData]:
-	return calc_valid_targets(origin, attack_targets, func(cell): return cell.type == GlobalTypes.Cell_Type.GROUND and cell.has_enemy)
+	return calc_valid_targets(origin, attack_targets, func(cell, target): return cell.type == GlobalTypes.Cell_Type.GROUND and cell.has_enemy)
 	
