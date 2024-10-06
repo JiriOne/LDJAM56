@@ -9,8 +9,8 @@ var direction_modifier : Vector2 = Vector2.ZERO
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	self.position.x = 160
-	self.position.y = 160
+	self.position.x = 32
+	self.position.y = 32
 	Controller.player_focused.connect(focus_on_player)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

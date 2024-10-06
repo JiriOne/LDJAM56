@@ -16,13 +16,14 @@ grid_width = 100
 grid_height = 100
 
 [node name="Frog" parent="GridSystem" instance=ExtResource("2_iquky")]
-gridPosition = Vector2(9, 10)
+gridPosition = Vector2(9, 4)
 attackDamage = 40
 
 [node name="Enemy" parent="GridSystem" instance=ExtResource("3_cnh8g")]
 gridPosition = Vector2(12, 10)
 
 [node name="Mole" parent="GridSystem" instance=ExtResource("5_hiqb6")]
+gridPosition = Vector2(16, 4)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position_smoothing_speed = 8.0
