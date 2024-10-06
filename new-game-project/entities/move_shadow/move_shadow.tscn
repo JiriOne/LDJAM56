@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://84ll4y6hqt8x"]
 
-[ext_resource type="Texture2D" uid="uid://bsykiu4gj8gx0" path="res://assets/characters/frog/frog.png" id="1_8hefg"]
+[ext_resource type="Texture2D" uid="uid://dguk74mpplywb" path="res://assets/characters/frog/frog.png" id="1_8hefg"]
 [ext_resource type="Script" path="res://entities/move_shadow/move_shadow.gd" id="1_orlgp"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_h58xm"]
@@ -26,6 +26,7 @@ modulate = Color(1, 1, 1, 0.6)
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CanvasGroup"]
 position = Vector2(8, 8)
 sprite_frames = SubResource("SpriteFrames_h58xm")
+frame_progress = 0.811943
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(8, 8)
