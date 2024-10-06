@@ -12,9 +12,12 @@ grid_height = 40
 
 [node name="Player" parent="GridSystem" instance=ExtResource("2_iquky")]
 gridPosition = Vector2(10, 10)
-available_targets_text = "-x-
-xox
--x-"
+attackDamage = 40
+available_targets_text = "--x--
+-----
+x-o-x
+-----
+--x--"
 
 [node name="Enemy" parent="GridSystem" instance=ExtResource("3_cnh8g")]
 gridPosition = Vector2(12, 10)
