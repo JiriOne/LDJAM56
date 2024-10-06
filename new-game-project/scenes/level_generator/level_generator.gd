@@ -176,12 +176,6 @@ func _ready() -> void:
 			if free:
 				_create_dual_puzzle(key_pos/16)
 		
-		
-	
-	##TODO:
-		#"""
-		#- remve duplicate tiles
-		#"""
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

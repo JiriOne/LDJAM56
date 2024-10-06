@@ -13,7 +13,7 @@ var grid_system
 @export var selected : bool = false
 @export var gridPosition : Vector2 = Vector2.ZERO
 @export var attackDamage = 15
-
+@export var hp = 100
 
 var available_targets : Array[Vector2]
 
@@ -59,6 +59,7 @@ func _physics_process(delta: float) -> void:
 			position = lerp(position, pos_before_move, 0.2 * delta * pos_before_move.distance_to(current_attack_pos))
 			if pos_before_move.distance_squared_to(position) < 0.01:
 				current_state = self.State.IDLE
+				turn_taken = true
 
 func set_grid_pos(pos) -> void:
 	Controller.player_focused.emit(self)
@@ -134,6 +135,7 @@ func end_attack(target_grid_pos) -> void:
 	else:
 		current_state = self.State.MOVING_FROM_ENEMY
 
+
 func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT and current_state == State.IDLE and turn_taken == false and controller.player_turn == true:
@@ -158,6 +160,12 @@ func _on_move_request(grid_pos) -> void:
 
 func _on_attack_request(grid_pos) -> void:
 	start_attack(grid_pos)
-	turn_taken = true
 	hide_targets()
 	selected = false
+	
+# make player grey is turn_taken
+func _process(delta: float) -> void:
+	if turn_taken:
+		self.modulate = Color(0.5, 0.5, 0.5)
+	else:
+		self.modulate = Color(1, 1, 1)
