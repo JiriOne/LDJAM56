@@ -1,7 +1,10 @@
 extends Node
 
+signal player_focused(ply)
+
 var keys = 0
 var player_turn = false
+var party = []
 
 #restart the game
 func _restart_game():

@@ -25,4 +25,5 @@ gridPosition = Vector2(12, 10)
 [node name="Mole" parent="GridSystem" instance=ExtResource("5_hiqb6")]
 
 [node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_speed = 8.0
 script = ExtResource("4_deg2p")

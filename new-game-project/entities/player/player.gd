@@ -10,8 +10,6 @@ var shadow_texture : CompressedTexture2D
 # Grid System Reference
 var grid_system
 
-signal player_selected
-
 @export var selected : bool = false
 @export var gridPosition : Vector2 = Vector2.ZERO
 @export var attackDamage = 15
@@ -59,6 +57,7 @@ func _physics_process(delta: float) -> void:
 				current_state = self.State.IDLE
 
 func set_grid_pos(pos) -> void:
+	Controller.player_focused.emit(self)
 	# Remove from old cell in the grid system
 	var data_old : GridCellData = grid_system.get_cell_data(gridPosition)
 	data_old.has_player = false
@@ -137,6 +136,7 @@ func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 			var plys = get_tree().get_nodes_in_group("player_character")
 			for ply in plys:
 				if ply == self:
+					Controller.player_focused.emit(self)
 					self.selected = not self.selected
 					if self.selected:
 						show_targets()
