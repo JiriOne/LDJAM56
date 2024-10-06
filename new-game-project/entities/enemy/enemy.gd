@@ -53,7 +53,7 @@ func set_grid_pos(pos) -> void:
 
 func _ready() -> void:
 	grid_system = get_parent()
-	await grid_system.grid_initialized
+	grid_system.initialize()
 	position = globalUtil.grid_to_world(gridPosition)
 	generator_will_probably_do_this()
 	healthBar.value = hp

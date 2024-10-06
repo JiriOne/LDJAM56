@@ -59,7 +59,7 @@ func _manhattan_distance(a: Vector2, b: Vector2) -> float:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	await grid_system.grid_initialized
+	grid_system.initialize()
 	var location = Vector2(0,0)
 	randomize()
 	for i in range(100):	

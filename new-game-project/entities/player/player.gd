@@ -43,8 +43,9 @@ var attack_shadow_scene = preload("res://entities/attack_shadow/attack_shadow.ts
 var valid_attack_targets : Array[GridCellData]
 
 func _ready() -> void:
+	print("test")
 	grid_system = get_parent()
-	await grid_system.grid_initialized
+	grid_system.initialize()
 	Controller.party.append(self)
 	set_grid_pos(gridPosition)
 	var movement_file = FileAccess.open(self.get_script().get_path().get_base_dir() + "/movement.txt", FileAccess.READ)
