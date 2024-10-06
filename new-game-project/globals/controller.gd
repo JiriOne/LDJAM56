@@ -1,5 +1,7 @@
 extends Node
 
+signal player_focused(ply)
+
 var keys = 0
 var player_turn = true
 var party = [] 
