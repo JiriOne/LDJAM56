@@ -13,16 +13,27 @@ func _process(delta: float) -> void:
 	#var party = Controller.party
 	for doodle in player_doodles.keys():
 		#pivot_offset
-		var center_to_player = player_doodles.get(doodle).global_position - get_viewport().get_camera_2d().get_screen_center_position()
+		var center_to_player = player_doodles.get(doodle).position - get_viewport().get_camera_2d().get_screen_center_position()
 		var screen_width = get_viewport_rect().size.x
 		var screen_height = get_viewport_rect().size.y
-		var screen_edge_position = Vector2(screen_width / 2 + center_to_player.normalized().x * 120, screen_height / 2 + center_to_player.normalized().y * 80)
+		var screen_edge_position = Vector2(screen_width / 2 + center_to_player.normalized().x * 130, screen_height / 2 + center_to_player.normalized().y * 80)
 		doodle.position = screen_edge_position
+		doodle.get_node("AnimatedSprite2D").frame = (2 if center_to_player.x < 0 else 0) + (1 if center_to_player.y > 0.01 else 0)
 
 func _on_player_screen_enter(ply : Player):
-	pass
+	var doodle = player_doodles.find_key(ply)
+	if doodle:
+		player_doodles.erase(doodle)
+		doodle.queue_free()
 	
 func _on_player_screen_exit(ply : Player):
 	var doodle = player_compass_doodle.instantiate()
 	add_child(doodle)
+	doodle.gui_input.connect(_on_doodle_input.bind(ply))
 	player_doodles.get_or_add(doodle, ply)
+
+func _on_doodle_input(event : InputEvent, ply : Player) -> void:
+	if event is InputEventMouseButton:
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			if ply:
+				Controller.player_focused.emit(ply)
