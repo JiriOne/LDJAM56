@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://nrtd32g467au"]
+[gd_scene load_steps=7 format=3 uid="uid://nrtd32g467au"]
 
 [ext_resource type="PackedScene" uid="uid://nsyjrhc8v01u" path="res://scenes/gridsystem/grid_system.tscn" id="1_mppkf"]
-[ext_resource type="PackedScene" uid="uid://boafweukv20g8" path="res://entities/player/player.tscn" id="2_iquky"]
+[ext_resource type="PackedScene" uid="uid://boafweukv20g8" path="res://entities/frog/frog.tscn" id="2_iquky"]
 [ext_resource type="PackedScene" uid="uid://d4cggb2eydk77" path="res://scenes/level_generator/level_generator.tscn" id="3_6vnbk"]
 [ext_resource type="PackedScene" uid="uid://c6lkb2j5hossk" path="res://entities/enemy/enemy.tscn" id="3_cnh8g"]
 [ext_resource type="Script" path="res://scenes/level/camera_2d.gd" id="4_deg2p"]
+[ext_resource type="PackedScene" uid="uid://cbk8txuwkh0dh" path="res://entities/mole/mole.tscn" id="5_hiqb6"]
 
 [node name="Level" type="Node2D"]
 
@@ -14,19 +15,14 @@
 grid_width = 100
 grid_height = 100
 
-[node name="Player" parent="GridSystem" instance=ExtResource("2_iquky")]
-gridPosition = Vector2(10, 10)
+[node name="Frog" parent="GridSystem" instance=ExtResource("2_iquky")]
+gridPosition = Vector2(9, 10)
 attackDamage = 40
-available_targets_text = "---x---
--------
----x---
-x-xox-x
----x---
--------
----x---"
 
 [node name="Enemy" parent="GridSystem" instance=ExtResource("3_cnh8g")]
 gridPosition = Vector2(12, 10)
+
+[node name="Mole" parent="GridSystem" instance=ExtResource("5_hiqb6")]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 script = ExtResource("4_deg2p")

@@ -1,28 +1,17 @@
-[gd_scene load_steps=8 format=3 uid="uid://boafweukv20g8"]
+[gd_scene load_steps=7 format=3 uid="uid://boafweukv20g8"]
 
-[ext_resource type="Script" path="res://entities/player/player.gd" id="1_ghvvm"]
+[ext_resource type="Script" path="res://entities/frog/frog.gd" id="1_m2jcb"]
 [ext_resource type="Texture2D" uid="uid://dguk74mpplywb" path="res://assets/characters/frog/frog.png" id="2_dp5wq"]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_2c0x3"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("2_dp5wq")
-}],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_go6pq"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_axhhe"]
 size = Vector2(16, 16)
 
-[sub_resource type="Animation" id="Animation_7kog4"]
+[sub_resource type="Animation" id="Animation_5wxc5"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("CanvasGroup/AnimatedSprite2D:position")
+tracks/0/path = NodePath("CanvasGroup/Sprite2D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -32,12 +21,12 @@ tracks/0/keys = {
 "values": [Vector2(8, 8)]
 }
 
-[sub_resource type="Animation" id="Animation_hpk8b"]
+[sub_resource type="Animation" id="Animation_5dgue"]
 resource_name = "basic_attack_start"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("CanvasGroup/AnimatedSprite2D:position")
+tracks/0/path = NodePath("CanvasGroup/Sprite2D:position")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -64,30 +53,30 @@ tracks/1/keys = {
 }]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_81ewi"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_r1oun"]
 _data = {
-"RESET": SubResource("Animation_7kog4"),
-"basic_attack_start": SubResource("Animation_hpk8b")
+"RESET": SubResource("Animation_5wxc5"),
+"basic_attack_start": SubResource("Animation_5dgue")
 }
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Frog" type="CharacterBody2D" groups=["player_character"]]
 input_pickable = true
-script = ExtResource("1_ghvvm")
+script = ExtResource("1_m2jcb")
 
 [node name="CanvasGroup" type="CanvasGroup" parent="."]
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="CanvasGroup"]
+[node name="Sprite2D" type="Sprite2D" parent="CanvasGroup"]
 z_index = 1
 position = Vector2(8, 8)
-sprite_frames = SubResource("SpriteFrames_2c0x3")
+texture = ExtResource("2_dp5wq")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(8, 8)
-shape = SubResource("RectangleShape2D_go6pq")
+shape = SubResource("RectangleShape2D_axhhe")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_81ewi")
+"": SubResource("AnimationLibrary_r1oun")
 }
 
 [connection signal="input_event" from="." to="." method="_on_input_event"]

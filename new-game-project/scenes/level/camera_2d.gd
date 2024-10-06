@@ -1,12 +1,11 @@
 extends Camera2D
 
 @onready var level: Node2D = $".."
-@onready var player: CharacterBody2D = $"../GridSystem/Player"
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	self.position.x = player.position.x
-	self.position.y = player.position.y
+	self.position.x = 160
+	self.position.y = 160
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

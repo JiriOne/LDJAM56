@@ -1,13 +1,21 @@
 extends CharacterBody2D
+class_name Player
+
+# -------- Interfaced Variables -----------
+var move_conditional : Callable
+var attack_conditional : Callable
+var shadow_texture : CompressedTexture2D
+# -----------------------------------------
 
 # Grid System Reference
 var grid_system
+
+signal player_selected
 
 @export var selected : bool = false
 @export var gridPosition : Vector2 = Vector2.ZERO
 @export var attackDamage = 15
 
-@export_multiline var available_targets_text : String
 var available_targets : Array[Vector2]
 
 @onready var globalUtil = get_node("/root/GlobalUtil")
@@ -35,9 +43,11 @@ var valid_attack_targets : Array[GridCellData]
 
 func _ready() -> void:
 	grid_system = get_parent()
-	position = globalUtil.grid_to_world(gridPosition)
-	available_targets = translate_targets()
-	move_shadows = []
+	await grid_system.grid_initialized
+	set_grid_pos(gridPosition)
+	var movement_file = FileAccess.open(self.get_script().get_path().get_base_dir() + "/movement.txt", FileAccess.READ)
+	var available_targets_text = movement_file.get_as_text()
+	available_targets = translate_targets(available_targets_text)
 
 func _physics_process(delta: float) -> void:
 	match current_state:
@@ -49,12 +59,20 @@ func _physics_process(delta: float) -> void:
 				current_state = self.State.IDLE
 
 func set_grid_pos(pos) -> void:
+	# Remove from old cell in the grid system
+	var data_old : GridCellData = grid_system.get_cell_data(gridPosition)
+	data_old.has_player = false
+	grid_system.update_cell(data_old)
+	# Set world pos
 	self.position = globalUtil.grid_to_world(pos)
 	gridPosition = pos
+	# Make update in the grid system
 	var data : GridCellData = grid_system.get_cell_data(pos)
+	data.has_player = true
+	data.player = self
 	grid_system.update_cell(data)
 
-func translate_targets() -> Array[Vector2]:
+func translate_targets(available_targets_text) -> Array[Vector2]:
 	var lines : PackedStringArray = available_targets_text.split("\n", false)
 	var lineLength = len(lines[0])
 	var result : Array[Vector2] = []
@@ -71,10 +89,11 @@ func translate_targets() -> Array[Vector2]:
 
 func show_targets() -> void:
 	var move_targets : Array[Vector2]
-	valid_move_targets = grid_system.calc_valid_move_targets(self.gridPosition, available_targets)
-	valid_attack_targets = grid_system.calc_valid_attack_targets(self.gridPosition, available_targets)
+	valid_move_targets = grid_system.calc_valid_targets(self.gridPosition, available_targets, move_conditional)
+	valid_attack_targets = grid_system.calc_valid_targets(self.gridPosition, available_targets, attack_conditional)
 	for target in valid_move_targets:
 		var new_ms = move_shadow_scene.instantiate()
+		new_ms.set_texture(shadow_texture)
 		new_ms.position = globalUtil.grid_to_world(target.pos)
 		move_shadows.append(new_ms)
 		grid_system.add_child(new_ms)
@@ -115,11 +134,17 @@ func end_attack(target_grid_pos) -> void:
 func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT and current_state == State.IDLE:
-			selected = not selected
-			if selected:
-				show_targets()
-			else:
-				hide_targets()
+			var plys = get_tree().get_nodes_in_group("player_character")
+			for ply in plys:
+				if ply == self:
+					self.selected = not self.selected
+					if self.selected:
+						show_targets()
+					else:
+						hide_targets()
+				else:
+					ply.hide_targets()
+					ply.selected = false
 
 func _on_move_request(grid_pos) -> void:
 	self.set_grid_pos(grid_pos)
