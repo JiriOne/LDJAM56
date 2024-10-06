@@ -5,6 +5,55 @@ extends Node2D
 var rng = RandomNumberGenerator.new()
 
 
+func _create_water_puzzle(key_pos: Vector2):
+	for i in range(-2,3):
+		for j in range(-2,3):
+			var curr_pos = Vector2(i,j) + key_pos
+			if tile_map_layer.get_cell_atlas_coords(curr_pos) != Vector2i(2,0):
+				if curr_pos == key_pos:
+					tile_map_layer.set_cell(curr_pos, 0, Vector2i(1,0))
+				elif Vector2(i,j) == Vector2(-2,-2) or Vector2(i,j) == Vector2(-2,2) or Vector2(i,j) == Vector2(2,-2) or Vector2(i,j) == Vector2(2,2):
+					tile_map_layer.set_cell(curr_pos, 0, Vector2i(1,0))
+				else:
+					tile_map_layer.set_cell(curr_pos, 0, Vector2i(0,0))
+
+func _create_fence_puzzle(key_pos: Vector2):
+	for i in range(-2,3):
+		for j in range(-2,3):
+			var curr_pos = Vector2(i,j) + key_pos
+			if tile_map_layer.get_cell_atlas_coords(curr_pos) != Vector2i(2,0):
+				if curr_pos == key_pos:
+					tile_map_layer.set_cell(curr_pos, 0, Vector2i(1,0))
+				elif Vector2(i,j).distance_to(Vector2(0,0)) <= 1.5:
+					tile_map_layer.set_cell(curr_pos, 0, Vector2i(1,0))
+				else:
+					tile_map_layer.set_cell(curr_pos, 0, Vector2i(4,0))
+
+func _create_dual_puzzle(key_pos: Vector2):
+	#add walls 
+	for i in range(-2,3):
+		var curr_pos = Vector2(i,-1) + key_pos
+		tile_map_layer.set_cell(curr_pos, 0, Vector2i(2,0))
+	
+	
+	tile_map_layer.set_cell(Vector2(-2,0) + key_pos, 0, Vector2i(2,0))
+	tile_map_layer.set_cell(Vector2(2,0) + key_pos, 0, Vector2i(2,0))
+	tile_map_layer.set_cell(Vector2(-2,1) + key_pos, 0, Vector2i(2,0))
+	tile_map_layer.set_cell(Vector2(2,1) + key_pos, 0, Vector2i(2,0))
+	tile_map_layer.set_cell(Vector2(-2,2) + key_pos, 0, Vector2i(2,0))
+	tile_map_layer.set_cell(Vector2(2,2) + key_pos, 0, Vector2i(2,0))
+	tile_map_layer.set_cell(Vector2(-2,3) + key_pos, 0, Vector2i(2,0))
+	tile_map_layer.set_cell(Vector2(2,3) + key_pos, 0, Vector2i(2,0))
+	
+	for i in range(-1,2):
+		var curr_pos = Vector2(i, 1) + key_pos
+		tile_map_layer.set_cell(curr_pos, 0, Vector2i(0,0))
+	
+	for i in range(-1,2):
+		var curr_pos = Vector2(i, 3) + key_pos
+		tile_map_layer.set_cell(curr_pos, 0, Vector2i(4,0))
+		
+
 func _manhattan_distance(a: Vector2, b: Vector2) -> float:
 	return abs(a.x - b.x) + abs(a.y - b.y)
 
@@ -22,14 +71,14 @@ func _ready() -> void:
 	var room_sizes = []
 	
 	for i in range(10):
-		var room_size = Vector2(rng.randi_range(10,15),rng.randi_range(10,15))
+		var room_size = Vector2(rng.randi_range(15,20),rng.randi_range(15,20))
 		# make the room far enough from the others
 		var room_location = Vector2(rng.randi_range(0,100-room_size.x),rng.randi_range(0,100-room_size.y))
 
 		while(true):
 			var too_close = false
 			for other_room_location in room_locations:
-				if room_location.distance_to(other_room_location) < 17:
+				if room_location.distance_to(other_room_location) < 22:
 					too_close = true
 					break
 			if too_close:
@@ -48,6 +97,7 @@ func _ready() -> void:
 				else:
 					# Clear the inside of the room
 					tile_map_layer.set_cell(Vector2i(room_location.x + x, room_location.y + y), 0, Vector2i(1, 0))
+	
 	
 	#add straight corridors
 	for i in range(len(room_locations)-1):
@@ -89,23 +139,49 @@ func _ready() -> void:
 						# Clear the inside of the room
 						tile_map_layer.set_cell(Vector2i(room_locations[i].x + x, room_locations[i].y + y), 0, Vector2i(1, 0))
 	
-	for i in len(room_locations):
-		if rng.randf() < 0.5:
-			#add random tiles to make the room look more interesting
-			var water_loc = Vector2(rng.randi_range(0,room_sizes[i].x) + room_locations[i].x,rng.randi_range(0,room_sizes[i].y) + room_locations[i].y)
-			var water_radius = rng.randi_range(2,5)
-			for xx in range(room_sizes[i].x):
-				for yy in range(room_sizes[i].y):
-					var curr_loc = Vector2(xx + room_locations[i].x,yy + room_locations[i].y)
-					if water_loc.distance_to(curr_loc) < water_radius:
-						#check if the tile is not a wall
-						if tile_map_layer.get_cell_atlas_coords(curr_loc) != Vector2i(2,0):
-							tile_map_layer.set_cell(curr_loc,0,Vector2i(0,0))
-
-	#TODO:
-		"""
-		- remve duplicate tiles
-		"""
+	#for i in len(room_locations):
+		#if rng.randf() < 0.3:
+			##add random tiles to make the room look more interesting
+			#var water_loc = Vector2(rng.randi_range(0,room_sizes[i].x) + room_locations[i].x,rng.randi_range(0,room_sizes[i].y) + room_locations[i].y)
+			#var water_radius = rng.randi_range(2,5)
+			#for xx in range(room_sizes[i].x):
+				#for yy in range(room_sizes[i].y):
+					#var curr_loc = Vector2(xx + room_locations[i].x,yy + room_locations[i].y)
+					#if water_loc.distance_to(curr_loc) < water_radius:
+						##check if the tile is not a wall
+						#if tile_map_layer.get_cell_atlas_coords(curr_loc) != Vector2i(2,0):
+							#tile_map_layer.set_cell(curr_loc,0,Vector2i(0,0))
+	
+	#generate key scene object
+	for i in range(len(room_locations)):
+		var key = preload("res://entities/key/key.tscn").instantiate()
+		
+		#add variation to the key position
+		var key_pos = room_locations[i]*16 + round(room_sizes[i] / 2) *16
+		key_pos += Vector2(rng.randi_range(-3,3)*16, rng.randi_range(-3,3)*16)
+		key.position = key_pos
+		add_child(key)
+		
+		if i == 0 or rng.randf() < 0.2:
+			_create_water_puzzle(key_pos/16)
+		elif rng.randf() < 0.5:
+			_create_fence_puzzle(key_pos/16)
+		#check for enough free tiles below
+		else:
+			var free = true
+			for k in range(-5,5):
+				for j in range(-5,5):
+					if tile_map_layer.get_cell_atlas_coords(Vector2(k,j) + key_pos/16) == Vector2i(2,0):
+						free = false
+			if free:
+				_create_dual_puzzle(key_pos/16)
+		
+		
+	
+	##TODO:
+		#"""
+		#- remve duplicate tiles
+		#"""
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
