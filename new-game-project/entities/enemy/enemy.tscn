@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://c6lkb2j5hossk"]
 
 [ext_resource type="Script" path="res://entities/enemy/enemy.gd" id="1_nvnmj"]
-[ext_resource type="Texture2D" uid="uid://bemk80t50a5b6" path="res://assets/Smileyset_Retro/smiley18.png" id="2_kolte"]
+[ext_resource type="Texture2D" uid="uid://c1doul5e6378h" path="res://assets/characters/cat/cat.png" id="2_qshqp"]
 [ext_resource type="Texture2D" uid="uid://blh480k24i7w6" path="res://ui/stat_bars/progress/progress_background.png" id="3_qkmj1"]
 [ext_resource type="Texture2D" uid="uid://4liy0yw4qbps" path="res://ui/stat_bars/progress/progress_bar.png" id="4_6437w"]
 
@@ -9,7 +9,7 @@
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_kolte")
+"texture": ExtResource("2_qshqp")
 }],
 "loop": true,
 "name": &"default",

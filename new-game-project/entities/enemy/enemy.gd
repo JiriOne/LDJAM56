@@ -24,7 +24,6 @@ func hurt(dp):
 	hp = hp - dp
 	healthBar.value = hp
 	if hp <= 0:
-		print("die")
 		self.die()
 
 func die():
