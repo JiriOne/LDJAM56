@@ -135,7 +135,10 @@ func _process(delta: float) -> void:
 			direction.x = clamp(direction.x,-1,1)
 			direction.y = clamp(direction.y,-1,1)
 			
-			set_grid_pos(gridPosition + direction)
+			var cell_data = grid_system.get_cell_data(gridPosition + direction)
+			
+			if !cell_data.has_enemy and !cell_data.has_player and cell_data.type == GlobalTypes.Cell_Type.GROUND:	
+				set_grid_pos(gridPosition + direction)
 			
 			current_state = State.IDLE
 			turn_taken = true

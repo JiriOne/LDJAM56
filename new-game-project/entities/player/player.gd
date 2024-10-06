@@ -43,7 +43,6 @@ var attack_shadow_scene = preload("res://entities/attack_shadow/attack_shadow.ts
 var valid_attack_targets : Array[GridCellData]
 
 func _ready() -> void:
-	print("test")
 	grid_system = get_parent()
 	grid_system.initialize()
 	set_grid_pos(gridPosition)
@@ -155,7 +154,6 @@ func end_attack(target_grid_pos) -> void:
 func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT and current_state == State.IDLE and turn_taken == false and controller.player_turn == true and self in Controller.party:
-			print()
 			var plys = get_tree().get_nodes_in_group("player_character")
 			for ply in plys:
 				if ply == self:

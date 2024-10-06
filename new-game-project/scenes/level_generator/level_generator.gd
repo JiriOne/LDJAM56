@@ -114,6 +114,13 @@ func _ready() -> void:
 			#add random tiles to make the corridor look more interesting
 			for r in range(3):
 				tile_map_layer.set_cell(Vector2i(x, y+rng.randi_range(-2,2)), 0, Vector2i(3, 0))
+				
+			if rng.randf() < 0.1:
+				var enemy = preload("res://entities/enemy/enemy.tscn").instantiate()
+				print("la")
+				enemy.position = Vector2(x,y)*16 + Vector2(rng.randi_range(-3,3),rng.randi_range(-3,3))*16
+				enemy.gridPosition = enemy.position/16
+				grid_system.add_child(enemy)
 
 			if x < int(center_b.x):
 				x += 1
@@ -124,6 +131,14 @@ func _ready() -> void:
 
 			for r in range(3):
 				tile_map_layer.set_cell(Vector2i(x+rng.randi_range(-2,2), y), 0, Vector2i(3, 0))
+				
+			if rng.randf() < 0.1:
+				var enemy = preload("res://entities/enemy/enemy.tscn").instantiate()
+				print("la")
+				enemy.position = Vector2(x,y)*16 + Vector2(rng.randi_range(-3,3),rng.randi_range(-3,3))*16
+				enemy.gridPosition = enemy.position/16
+				grid_system.add_child(enemy)
+				
 			if y < int(center_b.y):
 				y += 1
 			else:
