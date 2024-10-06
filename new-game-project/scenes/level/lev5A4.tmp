@@ -1,9 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://nrtd32g467au"]
+[gd_scene load_steps=4 format=3 uid="uid://nrtd32g467au"]
 
 [ext_resource type="PackedScene" uid="uid://nsyjrhc8v01u" path="res://scenes/gridsystem/grid_system.tscn" id="1_mppkf"]
 [ext_resource type="PackedScene" uid="uid://boafweukv20g8" path="res://entities/player/player.tscn" id="2_iquky"]
 [ext_resource type="PackedScene" uid="uid://d4cggb2eydk77" path="res://scenes/level_generator/level_generator.tscn" id="3_6vnbk"]
-[ext_resource type="Script" path="res://scenes/level/camera_2d.gd" id="4_deg2p"]
 
 [node name="Level" type="Node2D"]
 
@@ -15,6 +14,3 @@ grid_height = 40
 
 [node name="Player" parent="GridSystem" instance=ExtResource("2_iquky")]
 gridPosition = Vector2(10, 10)
-
-[node name="Camera2D" type="Camera2D" parent="."]
-script = ExtResource("4_deg2p")
