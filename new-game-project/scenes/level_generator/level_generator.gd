@@ -3,6 +3,7 @@ extends Node2D
 @onready var grid_system = $"../GridSystem"
 @onready var tile_map_layer: TileMapLayer = $TileMapLayer
 var rng = RandomNumberGenerator.new()
+@onready var camera_2d: Camera2D = $"../Camera2D"
 
 
 func _create_water_puzzle(key_pos: Vector2):
@@ -181,7 +182,12 @@ func _ready() -> void:
 		var player = preload("res://entities/frog/frog.tscn").instantiate()
 		player.position = room_locations[i]*16 + round(room_sizes[i] / 2 + Vector2(rng.randi_range(-3,3), rng.randi_range(-3,3))) *16
 		player.gridPosition = player.position/16
+		if i == 0:
+			Controller.party.append(player)
+			camera_2d.focus_on_player(player)
+			
 		grid_system.add_child(player)
+		
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

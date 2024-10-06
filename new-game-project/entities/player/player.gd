@@ -46,7 +46,6 @@ func _ready() -> void:
 	print("test")
 	grid_system = get_parent()
 	grid_system.initialize()
-	Controller.party.append(self)
 	set_grid_pos(gridPosition)
 	var movement_file = FileAccess.open(self.get_script().get_path().get_base_dir() + "/movement.txt", FileAccess.READ)
 	var available_targets_text = movement_file.get_as_text()
@@ -155,7 +154,7 @@ func end_attack(target_grid_pos) -> void:
 
 func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if event is InputEventMouseButton:
-		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT and current_state == State.IDLE and turn_taken == false and controller.player_turn == true:
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT and current_state == State.IDLE and turn_taken == false and controller.player_turn == true and self in Controller.party:
 			print()
 			var plys = get_tree().get_nodes_in_group("player_character")
 			for ply in plys:
