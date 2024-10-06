@@ -14,7 +14,7 @@ signal player_selected
 
 @export var selected : bool = false
 @export var gridPosition : Vector2 = Vector2.ZERO
-@export var attackDamage = 1500
+@export var attackDamage = 15
 
 
 var available_targets : Array[Vector2]

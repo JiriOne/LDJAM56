@@ -7,12 +7,12 @@ var grid_system
 @export var gridPosition : Vector2 = Vector2.ZERO
 @export var hp = 100
 var turn_taken : bool = false
+var rng = RandomNumberGenerator.new()
 
 enum State {
 	IDLE,
-	MOVING_TO_PLAYER,
-	MOVING_FROM_PLAYER,
-	WALKING
+	WALKING,
+	AGGROED
 }
 
 var current_state : State = State.IDLE
@@ -67,12 +67,38 @@ func die():
 	queue_free()
 
 func _process(delta: float) -> void:
-	if Controller.player_turn == false and current_state == State.IDLE and turn_taken == false:
-		current_state = State.WALKING
+	if Controller.player_turn == false and turn_taken == false:
+		
+		var smallest_distance_to_player = 1000000
+		for player in Controller.party:
+			var distance = gridPosition.distance_to(player.gridPosition)
+			if distance < smallest_distance_to_player:
+				smallest_distance_to_player = distance
+
+		if smallest_distance_to_player <= 3:
+			current_state = State.AGGROED
+		else:
+			current_state = State.IDLE
+
+		if current_state == State.IDLE:
+			current_state = State.WALKING
 		
 	if current_state == State.WALKING:
-		set_grid_pos(gridPosition + Vector2(0,0))
+		
+		set_grid_pos(gridPosition + Vector2(rng.randi_range(-1,1),rng.randi_range(-1,1)))
 		
 		current_state = State.IDLE
 		turn_taken = true
+
+	if current_state == State.AGGROED:
+		var player = Controller.party[0]
+		var distance = gridPosition.distance_to(player.gridPosition)
+		var direction = player.gridPosition - gridPosition
 		
+		direction.x = clamp(direction.x,-1,1)
+		direction.y = clamp(direction.y,-1,1)
+		
+		set_grid_pos(gridPosition + direction)
+		
+		current_state = State.IDLE
+		turn_taken = true
