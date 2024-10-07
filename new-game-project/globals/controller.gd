@@ -5,6 +5,7 @@ signal key_collected
 signal key_used
 signal hud_update
 signal game_over
+signal game_win
 
 var keys = 0
 var player_turn = true
@@ -19,6 +20,7 @@ func _ready() -> void:
 	key_collected.connect(_on_key_collected)
 	key_used.connect(_on_key_used)
 	game_over.connect(_on_game_over)
+	game_win.connect(_on_game_win)
 
 #called when pressing the space bar
 func _input(event):
@@ -26,7 +28,7 @@ func _input(event):
 		_restart_game()
 	if event.is_action_pressed("ui_left"):
 		print(party)
-	
+		
 
 func _process(delta: float) -> void:
 	
@@ -78,3 +80,6 @@ func _on_key_used() -> void:
 
 func _on_game_over() -> void:
 	print("game over")
+
+func _on_game_win() -> void:
+	print("game win")

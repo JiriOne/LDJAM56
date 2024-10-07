@@ -8,6 +8,8 @@ var has_player : bool = false
 var player
 var has_key : bool = false
 var key
+var has_heart
+var heart
 var door
 var has_molshoop : bool = false
 var molshoop

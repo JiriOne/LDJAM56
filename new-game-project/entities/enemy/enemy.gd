@@ -81,6 +81,23 @@ func die():
 func _process(delta: float) -> void:
 	var smallest_distance_to_player = 1000000
 	var target_player = null
+
+	#check if surrounded by water
+	var surrounded_by_water = true
+	for i in range(-1,2):
+		for j in range(-1,2):
+			if i != 0 or j != 0:
+				var cell_data = grid_system.get_cell_data(gridPosition + Vector2(i,j))
+				if cell_data.type == GlobalTypes.Cell_Type.GROUND:
+					surrounded_by_water = false
+					break
+		if !surrounded_by_water:
+			break
+	
+	if surrounded_by_water:
+		hp = 0
+		die()
+
 	if Controller.player_turn == false and turn_taken == false and current_state != State.MOVING_TO_PLAYER and current_state != State.MOVING_FROM_PLAYER:
 		for player in Controller.party:
 			var distance = gridPosition.distance_to(player.gridPosition)
@@ -110,7 +127,7 @@ func _process(delta: float) -> void:
 		position = lerp(position, current_attack_pos, 0.1 * delta * pos_before_move.distance_to(current_attack_pos))
 	if current_state == State.MOVING_FROM_PLAYER:
 		position = lerp(position, pos_before_move, 0.2 * delta * pos_before_move.distance_to(current_attack_pos))
-		if pos_before_move.distance_squared_to(position) < 0.01:
+		if pos_before_move.distance_squared_to(position) < 0.1:
 			current_state = self.State.IDLE
 			turn_taken = true
 

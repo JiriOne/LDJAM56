@@ -70,14 +70,24 @@ func _physics_process(delta: float) -> void:
 		
 		if closest_party_member and self.position.distance_to(closest_party_member.position) < 23:
 			Controller.party.append(self)
+			health_bar.value = hp
 			
+			var game_win = true
+			for member in get_tree().get_nodes_in_group("player_character"):
+				print(member)
+				if member not in Controller.party:
+					print("not in party")
+					game_win = false
+			
+			if game_win == true:
+				Controller.game_win.emit()		
 	
 	match current_state:
 		self.State.MOVING_TO_ENEMY:
 			position = lerp(position, current_attack_pos, 0.1 * delta * pos_before_move.distance_to(current_attack_pos))
 		self.State.MOVING_FROM_ENEMY:
 			position = lerp(position, pos_before_move, 0.2 * delta * pos_before_move.distance_to(current_attack_pos))
-			if pos_before_move.distance_squared_to(position) < 0.01:
+			if pos_before_move.distance_squared_to(position) < 0.1:
 				current_state = self.State.IDLE
 				turn_taken = true
 
@@ -112,6 +122,13 @@ func set_grid_pos(pos) -> void:
 		Controller.key_collected.emit()
 		data.key.queue_free()
 		data.has_key = false
+	
+	if data.has_heart:
+		data.heart.queue_free()
+		data.has_heart = false
+		self.hp = 100
+		health_bar.value = hp	
+			
 	# Unlock door
 	if data.type == GlobalTypes.Cell_Type.DOOR:
 		grid_system.unlock_door(pos)
@@ -217,6 +234,7 @@ func hurt(dp):
 	health_bar.value = hp
 	if hp <= 0:
 		self.die()
+		
 
 func die():
 	var next_player = get_closest_party_member()
@@ -226,4 +244,3 @@ func die():
 		Controller.player_focused.emit(next_player)
 		Controller.party.erase(self)
 		queue_free()
-

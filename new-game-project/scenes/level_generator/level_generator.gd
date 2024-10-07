@@ -45,13 +45,15 @@ func _create_dual_puzzle(key_pos: Vector2):
 	tile_map_layer.set_cell(Vector2(2,2) + key_pos, 0, Vector2i(2,0))
 	tile_map_layer.set_cell(Vector2(-2,3) + key_pos, 0, Vector2i(2,0))
 	tile_map_layer.set_cell(Vector2(2,3) + key_pos, 0, Vector2i(2,0))
+	tile_map_layer.set_cell(Vector2(-2,4) + key_pos, 0, Vector2i(2,0))
+	tile_map_layer.set_cell(Vector2(2,4) + key_pos, 0, Vector2i(2,0))
 	
 	for i in range(-1,2):
 		var curr_pos = Vector2(i, 1) + key_pos
 		tile_map_layer.set_cell(curr_pos, 0, Vector2i(0,0))
 	
 	for i in range(-1,2):
-		var curr_pos = Vector2(i, 3) + key_pos
+		var curr_pos = Vector2(i, 4) + key_pos
 		tile_map_layer.set_cell(curr_pos, 0, Vector2i(4,0))
 		
 
@@ -71,7 +73,7 @@ func _ready() -> void:
 	var room_locations = []
 	var room_sizes = []
 	
-	for i in range(6):
+	for i in range(5):
 		
 		#make first room bigger:
 		var room_size
@@ -80,7 +82,7 @@ func _ready() -> void:
 		else:
 			room_size = Vector2(rng.randi_range(4,8),rng.randi_range(4,8))
 		# make the room far enough from the others
-		var room_location = Vector2(rng.randi_range(0,50-room_size.x),rng.randi_range(0,50-room_size.y))
+		var room_location = Vector2(rng.randi_range(room_size.x+5,50-room_size.x-5),rng.randi_range(room_size.y+2,50-room_size.y-2))
 
 		while(true):
 			var too_close = false
@@ -89,7 +91,7 @@ func _ready() -> void:
 					too_close = true
 					break
 			if too_close:
-				room_location = Vector2(rng.randi_range(0,50-room_size.x),rng.randi_range(0,50-room_size.y))
+				room_location = Vector2(rng.randi_range(room_size.x+5,50-room_size.x-5),rng.randi_range(room_size.y+2,50-room_size.y-2))
 			else:
 				break
 
@@ -113,12 +115,14 @@ func _ready() -> void:
 				tile_map_layer.set_cell(Vector2i(x, y+rng.randi_range(-2,2)), 0, Vector2i(3, 0))
 				
 			if rng.randf() < 0.1:
-				var enemy = preload("res://entities/enemy/enemy.tscn").instantiate()
-				enemy.position = Vector2(x,y)*16 + Vector2(rng.randi_range(-3,3),rng.randi_range(-3,3))*16
-				enemy.gridPosition = enemy.position/16
-				var cell = grid_system.get_cell_data(enemy.gridPosition)
-				cell.has_enemy = true
-				grid_system.add_child(enemy)
+				var rand_pos = Vector2(x,y)*16 + Vector2(rng.randi_range(-3,3),rng.randi_range(-3,3))*16
+				if rand_pos.x > 0 and rand_pos.x < 50*16 and rand_pos.y>0 and rand_pos.y < 50*16:
+					var enemy = preload("res://entities/enemy/enemy.tscn").instantiate()
+					enemy.position = rand_pos
+					enemy.gridPosition = enemy.position/16
+					var cell = grid_system.get_cell_data(enemy.gridPosition)
+					cell.has_enemy = true
+					grid_system.add_child(enemy)
 
 			if x < int(center_b.x):
 				x += 1
@@ -131,13 +135,15 @@ func _ready() -> void:
 				tile_map_layer.set_cell(Vector2i(x+rng.randi_range(-2,2), y), 0, Vector2i(3, 0))
 				
 			if rng.randf() < 0.1:
-				var enemy = preload("res://entities/enemy/enemy.tscn").instantiate()
-				enemy.position = Vector2(x,y)*16 + Vector2(rng.randi_range(-3,3),rng.randi_range(-3,3))*16
-				enemy.gridPosition = enemy.position/16
-				var cell = grid_system.get_cell_data(enemy.gridPosition)
-				cell.has_enemy = true
-				grid_system.add_child(enemy)
-				
+				var rand_pos = Vector2(x,y)*16 + Vector2(rng.randi_range(-3,3),rng.randi_range(-3,3))*16
+				if rand_pos.x > 0 and rand_pos.x < 50*16 and rand_pos.y>0 and rand_pos.y < 50*16:
+					var enemy = preload("res://entities/enemy/enemy.tscn").instantiate()
+					enemy.position = rand_pos
+					enemy.gridPosition = enemy.position/16
+					var cell = grid_system.get_cell_data(enemy.gridPosition)
+					cell.has_enemy = true
+					grid_system.add_child(enemy)
+					
 			if y < int(center_b.y):
 				y += 1
 			else:
@@ -176,81 +182,60 @@ func _ready() -> void:
 		grid_system.add_door(door_entity, room_location + door_pos)
 		grid_system.add_child(door_entity)
 	
-	for i in range(10):
+	for i in range(5):
 		var heart = preload("res://entities/heart/heart.tscn").instantiate()
-		var heart_pos = Vector2(rng.randi_range(0,50),rng.randi_range(0,50))
+		var heart_pos = Vector2(rng.randi_range(0,49),rng.randi_range(0,49))
 		heart.position = GlobalUtil.grid_to_world(heart_pos)
+		var cell_data = grid_system.get_cell_data(heart_pos)
+		cell_data.has_heart = true
+		cell_data.heart = heart
 		grid_system.add_child(heart)
 		
 	#generate key scene object
 	var key_positions = []
-	for i in range(len(room_locations)):
+	for i in range(len(room_locations) + 1):
 		var key = preload("res://entities/key/key.tscn").instantiate()
 		
 		#set first key pos to the room
 		var key_pos
 		if i == 0:
 			key_pos = room_locations[i] + round(room_sizes[i] / 2)
-			key_pos += Vector2(rng.randi_range(-3,3), rng.randi_range(-3,3))
+			key_pos += Vector2(rng.randi_range(-1,1), rng.randi_range(-1,1))
 		else:
 			key_pos = Vector2(rng.randi_range(10,40), rng.randi_range(10,40))
 			
-			#check if key in room
-			var in_room = false
-				
-			for j in range(len(room_locations)):
-				if key_pos.x >= room_locations[j].x and key_pos.x <= room_locations[j].x + room_sizes[j].x and key_pos.y >= room_locations[j].y and key_pos.y <= room_locations[j].y + room_sizes[j].y:
-					in_room = true
-					break
+			var invalid_location = false
 
-			while in_room:
+			var room_centers = [] 
+			for room_loc in range(len(room_locations)):
+				room_centers.append(room_locations[room_loc] + round(room_sizes[room_loc] / 2))
+			
+			#check if close to other keys
+			for other_key_pos in key_positions:
+				if key_pos.distance_to(other_key_pos) < 8:
+					invalid_location = true
+					break
+			#check if close to rooms
+			for room_location in room_centers:
+				if key_pos.distance_to(room_location) < 8:
+					invalid_location = true
+					break
+			
+			#get new location if invalid
+			while invalid_location:
 				key_pos = Vector2(rng.randi_range(10,40), rng.randi_range(10,40))
-				in_room = false
-				for j in range(len(room_locations)):
-					if key_pos.x >= room_locations[j].x and key_pos.x <= room_locations[j].x + room_sizes[j].x and key_pos.y >= room_locations[j].y and key_pos.y <= room_locations[j].y + room_sizes[j].y:
-						in_room = true
+				invalid_location = false
+				for other_key_pos in key_positions:
+					if key_pos.distance_to(other_key_pos) < 8:
+						invalid_location = true
+						key_pos = Vector2(rng.randi_range(10,40), rng.randi_range(10,40))
 						break
-						
-			var close_to_key = false
-				
-			for other in key_positions:
-				if key_pos.distance_to(other) < 8:
-					close_to_key = true
-					break
+				for room_location in room_centers:
+					if key_pos.distance_to(room_location) < 8:
+						invalid_location = true
+						key_pos = Vector2(rng.randi_range(10,40), rng.randi_range(10,40))
+						break
 
-			while close_to_key:
-				key_pos = Vector2(rng.randi_range(10,40), rng.randi_range(10,40))
-				close_to_key = false
-				for other in key_positions:
-					if key_pos.distance_to(other) < 8:
-						close_to_key = true
-						
-			var close_to_room = false
-
-			for j in range(len(room_locations)):
-				if key_pos.distance_to(room_locations[j] + round(room_sizes[j] / 2)) < 8:
-					close_to_room = true
-					break
-
-			while close_to_room:
-				key_pos = Vector2(rng.randi_range(10,40), rng.randi_range(10,40))
-				close_to_room = false
-				for j in range(len(room_locations)):
-					if key_pos.distance_to(room_locations[j] + round(room_sizes[j] / 2)) < 8:
-						close_to_room = true
-						
-			var there_is_cat_here_ohno = false
-
-			if grid_system.get_cell_data(key_pos).has_enemy:
-				there_is_cat_here_ohno = true
-			
-			while there_is_cat_here_ohno:
-				key_pos = Vector2(rng.randi_range(10,40), rng.randi_range(10,40))
-				if grid_system.get_cell_data(key_pos).has_enemy:
-					there_is_cat_here_ohno = true
-						
-				
-			
 		
 		key_positions.append(key_pos)	
 		key.position = GlobalUtil.grid_to_world(key_pos)
