@@ -4,8 +4,8 @@ const player_compass_doodle = preload("res://ui/overlays/player_compass/player_c
 var player_doodles : Dictionary
 
 func _ready() -> void:
-	var party = Controller.party
-	for ply : Player in party:
+	var plys = get_tree().get_nodes_in_group("player_character")
+	for ply : Player in plys:
 		ply.on_screen_notifier.screen_entered.connect(_on_player_screen_enter.bind(ply))
 		ply.on_screen_notifier.screen_exited.connect(_on_player_screen_exit.bind(ply))
 

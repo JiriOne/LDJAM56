@@ -9,3 +9,5 @@ var player
 var has_key : bool = false
 var key
 var door
+var has_molshoop : bool = false
+var molshoop

@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://cbk8txuwkh0dh"]
 
-[ext_resource type="Script" path="res://entities/frog/frog.gd" id="1_3gjg7"]
+[ext_resource type="Script" path="res://entities/mole/mole.gd" id="1_sq1ob"]
 [ext_resource type="Texture2D" uid="uid://cbxo58xv3osuj" path="res://assets/characters/mole/mole.png" id="2_kbtto"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p03vg"]
@@ -61,7 +61,7 @@ _data = {
 
 [node name="Mole" type="CharacterBody2D" groups=["player_character"]]
 input_pickable = true
-script = ExtResource("1_3gjg7")
+script = ExtResource("1_sq1ob")
 gridPosition = Vector2(10, 10)
 attackDamage = 40
 

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://diiiolgj0q5qu"]
+
+[ext_resource type="Script" path="res://entities/molshoop/molshoop.gd" id="1_0v13w"]
+[ext_resource type="Texture2D" uid="uid://dgfn6m4oi3rt8" path="res://assets/molshoop/molshoop.png" id="2_g6hu4"]
+
+[node name="Molshoop" type="Area2D"]
+script = ExtResource("1_0v13w")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(8, 8)
+texture = ExtResource("2_g6hu4")

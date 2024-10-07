@@ -4,5 +4,6 @@ enum Cell_Type {
 	GROUND,
 	WALL,
 	WATER,
-	DOOR
+	DOOR,
+	FENCE
 }

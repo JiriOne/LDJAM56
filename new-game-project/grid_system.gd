@@ -59,11 +59,11 @@ func calc_valid_targets(origin, targets : Array[Vector2], conditional : Callable
 			result.append(cell)
 	return result
 
-func is_path_to_target_ground(origin, target) -> bool:
+func is_path_to_target_of_types(origin, target, types) -> bool:
 	var dir = ceil((target - origin).normalized())
 	var step_pos : Vector2 = origin + dir
 	var trace_positions = []
 	while step_pos != target:
 		trace_positions.append(step_pos)
 		step_pos = step_pos + dir
-	return trace_positions.all(func(pos): return self.get_cell_data(pos).type == GlobalTypes.Cell_Type.GROUND)
+	return trace_positions.all(func(pos): return types.has(self.get_cell_data(pos).type))
