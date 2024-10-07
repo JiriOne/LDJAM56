@@ -1,7 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://dksht6kj0wulv"]
+[gd_scene load_steps=3 format=3 uid="uid://dksht6kj0wulv"]
 
 [ext_resource type="PackedScene" uid="uid://cojkbrlafpemr" path="res://ui/overlays/player_compass/player_compass.tscn" id="1_5i8ff"]
+[ext_resource type="PackedScene" uid="uid://yvearqdw3bvq" path="res://ui/overlays/hud/hud.tscn" id="2_633c8"]
 
 [node name="UI" type="CanvasLayer"]
 
 [node name="PlayerCompass" parent="." instance=ExtResource("1_5i8ff")]
+
+[node name="HUD" parent="." instance=ExtResource("2_633c8")]

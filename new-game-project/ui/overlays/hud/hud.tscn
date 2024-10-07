@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=3 uid="uid://yvearqdw3bvq"]
+
+[ext_resource type="Script" path="res://ui/overlays/hud/hud.gd" id="1_a44b5"]
+[ext_resource type="Texture2D" uid="uid://cslbhh55jg8pq" path="res://assets/key/key.png" id="1_kbmxm"]
+
+[sub_resource type="FontVariation" id="FontVariation_6a27t"]
+spacing_top = -4
+baseline_offset = 0.105
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 180.0
+mouse_filter = 2
+script = ExtResource("1_a44b5")
+
+[node name="KeyDisplay" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -33.0
+offset_top = 5.0
+offset_right = -2.0
+offset_bottom = 21.0
+grow_horizontal = 0
+alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="KeyDisplay"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = ExtResource("1_kbmxm")
+expand_mode = 2
+
+[node name="KeyCounter" type="RichTextLabel" parent="KeyDisplay"]
+custom_minimum_size = Vector2(16.92, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/normal_font = SubResource("FontVariation_6a27t")
+theme_override_font_sizes/normal_font_size = 14
+text = "0"
+scroll_active = false
+autowrap_mode = 0

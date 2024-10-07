@@ -25,16 +25,27 @@ func _process(delta: float) -> void:
 func get_cell_data(pos) -> GridCellData:
 	return grid[pos.x][pos.y]
 
-func update_cell(data : GridCellData) -> void:
-	if (data.pos.x >= grid_width) or (data.pos.y >= grid_height) or (data.pos.x < 0) or (data.pos.y < 0):
-		printerr("WARNING: Tried to update cell that is out of bounds")
-		return
-	grid[data.pos.x][data.pos.y] = data
-
+#Function is not needed as you can update cells by changing its variables
+#func update_cell(data : GridCellData) -> void:
+	#if (data.pos.x >= grid_width) or (data.pos.y >= grid_height) or (data.pos.x < 0) or (data.pos.y < 0):
+		#printerr("WARNING: Tried to update cell that is out of bounds")
+		#return
+	#grid[data.pos.x][data.pos.y] = data
+	
 func set_cell_type(pos, type) -> void:
 	var data = get_cell_data(pos)
 	data.type = type
-	update_cell(data)
+
+func add_door(door, pos) -> void:
+	var cell_data = get_cell_data(pos)
+	cell_data.type = GlobalTypes.Cell_Type.DOOR
+	cell_data.door = door
+
+func unlock_door(pos) -> void:
+	Controller.key_used.emit()
+	var data = get_cell_data(pos)
+	data.door.queue_free()
+	data.type = GlobalTypes.Cell_Type.GROUND
 
 func calc_valid_targets(origin, targets : Array[Vector2], conditional : Callable) -> Array[GridCellData]:
 	var result : Array[GridCellData] = []

@@ -1,6 +1,9 @@
 extends Node
 
 signal player_focused(ply)
+signal key_collected
+signal key_used
+signal hud_update
 
 var keys = 0
 var player_turn = true
@@ -11,13 +14,16 @@ var enemies = []
 func _restart_game():
 	get_tree().reload_current_scene()
 
+func _ready() -> void:
+	key_collected.connect(_on_key_collected)
+	key_used.connect(_on_key_used)
+
 #called when pressing the space bar
 func _input(event):
 	if event.is_action_pressed("ui_select"):
 		_restart_game()
 	if event.is_action_pressed("ui_left"):
 		print(party)
-	
 	
 
 func _process(delta: float) -> void:
@@ -59,3 +65,11 @@ func _process(delta: float) -> void:
 				boi.turn_taken = false
 			player_turn = true
 		
+
+func _on_key_collected() -> void:
+	keys += 1
+	hud_update.emit()
+
+func _on_key_used() -> void:
+	keys -= 1
+	hud_update.emit()

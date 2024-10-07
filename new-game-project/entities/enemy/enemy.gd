@@ -41,7 +41,6 @@ func set_grid_pos(pos) -> void:
 	# Remove from old cell in the grid system
 	var data_old : GridCellData = grid_system.get_cell_data(gridPosition)
 	data_old.has_enemy = false
-	grid_system.update_cell(data_old)
 	# Set world pos
 	self.position = globalUtil.grid_to_world(pos)
 	gridPosition = pos
@@ -49,7 +48,6 @@ func set_grid_pos(pos) -> void:
 	var data : GridCellData = grid_system.get_cell_data(pos)
 	data.has_enemy = true
 	data.enemy = self
-	grid_system.update_cell(data)
 
 func _ready() -> void:
 	grid_system = get_parent()
@@ -63,7 +61,6 @@ func generator_will_probably_do_this():
 	var data = grid_system.get_cell_data(gridPosition)
 	data.has_enemy = true
 	data.enemy = self
-	grid_system.update_cell(data)
 
 func hurt(dp):
 	hp = hp - dp
@@ -83,7 +80,6 @@ func die():
 	Controller.enemies.remove_at(enemy_list_idx)
 	
 	data.has_enemy = false
-	grid_system.update_cell(data)
 	queue_free()
 
 func _process(delta: float) -> void:

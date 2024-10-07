@@ -6,3 +6,6 @@ var has_enemy: bool = false
 var enemy
 var has_player : bool = false
 var player
+var has_key : bool = false
+var key
+var door
