@@ -10,8 +10,6 @@
 [node name="LevelGen" parent="." instance=ExtResource("3_6vnbk")]
 
 [node name="GridSystem" parent="." instance=ExtResource("1_mppkf")]
-grid_width = 100
-grid_height = 100
 
 [node name="Enemy" parent="GridSystem" instance=ExtResource("3_cnh8g")]
 gridPosition = Vector2(12, 10)

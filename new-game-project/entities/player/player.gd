@@ -199,7 +199,12 @@ func _on_attack_request(grid_pos) -> void:
 	
 # make player grey is turn_taken
 func _process(delta: float) -> void:
-	if turn_taken:
-		self.modulate = Color(0.5, 0.5, 0.5)
+	if self not in Controller.party:
+		self.modulate = Color(1.0,0.0,0.0)
 	else:
-		self.modulate = Color(1, 1, 1)
+		if turn_taken:
+			self.modulate = Color(0.5, 0.5, 0.5)
+		else:
+			self.modulate = Color(1, 1, 1)
+	
+	

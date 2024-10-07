@@ -92,7 +92,7 @@ func _process(delta: float) -> void:
 				smallest_distance_to_player = distance
 				target_player = player
 
-		if smallest_distance_to_player <= 3:
+		if smallest_distance_to_player <= 6:
 			current_state = State.AGGROED
 		else:
 			current_state = State.IDLE
