@@ -1,10 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://dqkxs8gjv6w0r"]
+[gd_scene load_steps=4 format=3 uid="uid://dqkxs8gjv6w0r"]
 
 [ext_resource type="PackedScene" uid="uid://nrtd32g467au" path="res://scenes/level/level.tscn" id="1_ftc47"]
 [ext_resource type="PackedScene" uid="uid://dksht6kj0wulv" path="res://ui/ui.tscn" id="2_uglo8"]
+[ext_resource type="AudioStream" uid="uid://drtfax68p4iyu" path="res://assets/Audio/song/frogsong.mp3" id="3_ectfi"]
 
 [node name="Main" type="Node2D"]
 
 [node name="Level" parent="." instance=ExtResource("1_ftc47")]
 
 [node name="UI" parent="." instance=ExtResource("2_uglo8")]
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(0.618667, 0.48, 0.8, 1)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_ectfi")
+autoplay = true

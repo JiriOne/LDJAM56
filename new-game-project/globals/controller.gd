@@ -24,8 +24,7 @@ func _ready() -> void:
 
 #called when pressing the space bar
 func _input(event):
-	if event.is_action_pressed("ui_select"):
-		_restart_game()
+	
 	if event.is_action_pressed("ui_left"):
 		print(party)
 		

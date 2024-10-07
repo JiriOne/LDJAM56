@@ -1,11 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://yvearqdw3bvq"]
+[gd_scene load_steps=3 format=3 uid="uid://yvearqdw3bvq"]
 
 [ext_resource type="Script" path="res://ui/overlays/hud/hud.gd" id="1_a44b5"]
 [ext_resource type="Texture2D" uid="uid://cslbhh55jg8pq" path="res://assets/key/key.png" id="1_kbmxm"]
-
-[sub_resource type="FontVariation" id="FontVariation_6a27t"]
-spacing_top = -4
-baseline_offset = 0.105
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -37,7 +33,6 @@ expand_mode = 2
 custom_minimum_size = Vector2(16.92, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_fonts/normal_font = SubResource("FontVariation_6a27t")
 theme_override_font_sizes/normal_font_size = 14
 text = "0"
 scroll_active = false

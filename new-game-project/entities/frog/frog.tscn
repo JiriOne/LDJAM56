@@ -1,8 +1,14 @@
-[gd_scene load_steps=8 format=3 uid="uid://boafweukv20g8"]
+[gd_scene load_steps=14 format=3 uid="uid://boafweukv20g8"]
 
 [ext_resource type="Script" path="res://entities/frog/frog.gd" id="1_m2jcb"]
 [ext_resource type="Texture2D" uid="uid://dguk74mpplywb" path="res://assets/characters/frog/frog.png" id="2_dp5wq"]
 [ext_resource type="PackedScene" uid="uid://dwnslet3ys6ts" path="res://ui/stat_bars/progress/health_bar.tscn" id="3_bahxu"]
+[ext_resource type="Texture2D" uid="uid://tcix3pwkrs8o" path="res://assets/light/light.png" id="4_ge71m"]
+[ext_resource type="AudioStream" uid="uid://d1cf05o0o8ch3" path="res://assets/Audio/attack/attack.wav" id="5_ojwr2"]
+[ext_resource type="AudioStream" uid="uid://00upskry0eob" path="res://assets/Audio/attack/attack_2.wav" id="6_b3677"]
+[ext_resource type="AudioStream" uid="uid://bse2lkmnkngqs" path="res://assets/Audio/attack/attack_3.wav" id="7_mwymj"]
+[ext_resource type="AudioStream" uid="uid://ku7c32lw3i7p" path="res://assets/Audio/walk/frog.wav" id="8_2c52a"]
+[ext_resource type="AudioStream" uid="uid://cfwoldtpt11qe" path="res://assets/Audio/key/key.wav" id="9_p7jtl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_axhhe"]
 size = Vector2(16, 16)
@@ -87,5 +93,27 @@ speed_scale = 2.0
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
 position = Vector2(8.5, 8.5)
 scale = Vector2(0.25, 0.35)
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(8, 8)
+energy = 0.7
+shadow_enabled = true
+texture = ExtResource("4_ge71m")
+texture_scale = 0.5
+
+[node name="attack_1" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_ojwr2")
+
+[node name="attack_2" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_b3677")
+
+[node name="attack_3" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_mwymj")
+
+[node name="walk" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("8_2c52a")
+
+[node name="keysound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("9_p7jtl")
 
 [connection signal="input_event" from="." to="." method="_on_input_event"]

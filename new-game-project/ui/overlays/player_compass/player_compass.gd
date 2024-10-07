@@ -13,6 +13,10 @@ func _process(delta: float) -> void:
 	#var party = Controller.party
 	for doodle in player_doodles.keys():
 		#pivot_offset
+		if !player_doodles.get(doodle):
+			player_doodles.erase(doodle)
+			doodle.queue_free()
+			continue
 		var center_to_player = player_doodles.get(doodle).position - get_viewport().get_camera_2d().get_screen_center_position()
 		var screen_width = get_viewport_rect().size.x
 		var screen_height = get_viewport_rect().size.y

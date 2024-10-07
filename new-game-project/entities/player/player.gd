@@ -23,6 +23,13 @@ var available_targets : Array[Vector2]
 @onready var controller = get_node("/root/Controller")
 @onready var animationPlayer = $AnimationPlayer
 @onready var health_bar: TextureProgressBar = $CanvasGroup/HealthBar
+@onready var attack_1: AudioStreamPlayer2D = $attack_1
+@onready var attack_2: AudioStreamPlayer2D = $attack_2
+@onready var attack_3: AudioStreamPlayer2D = $attack_3
+@onready var walk: AudioStreamPlayer2D = $walk
+@onready var keysound: AudioStreamPlayer2D = $keysound
+
+
 
 var current_attack_cell : GridCellData
 var current_attack_pos : Vector2
@@ -55,10 +62,13 @@ func _ready() -> void:
 
 # make player grey is turn_taken
 func _process(delta: float) -> void:
-	if turn_taken:
-		$CanvasGroup/Sprite2D.modulate = Color(0.5, 0.5, 0.5)
+	if self not in Controller.party:
+		$CanvasGroup/Sprite2D.modulate = Color(1, 0, 0)
 	else:
-		$CanvasGroup/Sprite2D.modulate = Color(1, 1, 1)
+		if turn_taken:
+			$CanvasGroup/Sprite2D.modulate = Color(0.5, 0.5, 0.5)
+		else:
+			$CanvasGroup/Sprite2D.modulate = Color(1, 1, 1)
 
 func _physics_process(delta: float) -> void:
 	
@@ -105,6 +115,7 @@ func get_closest_party_member() -> Player:
 
 func set_grid_pos(pos) -> void:
 	Controller.player_focused.emit(self)
+	walk.play()
 	# Remove from old cell in the grid system
 	var data_old : GridCellData = grid_system.get_cell_data(gridPosition)
 	data_old.has_player = false
@@ -119,6 +130,7 @@ func set_grid_pos(pos) -> void:
 	
 	# Collect key
 	if data.has_key:
+		keysound.play()
 		Controller.key_collected.emit()
 		data.key.queue_free()
 		data.has_key = false
@@ -184,6 +196,14 @@ func hide_targets() -> void:
 	attack_shadows.clear()
 
 func start_attack(target_grid_pos) -> void:
+	var rand_attack_sound = randi_range(0,2)
+	match rand_attack_sound:
+		0:
+			attack_1.play()
+		1:
+			attack_2.play()
+		2:
+			attack_3.play()
 	pos_before_move = self.position
 	current_state = self.State.MOVING_TO_ENEMY
 	current_attack_cell = grid_system.get_cell_data(target_grid_pos)
@@ -200,6 +220,7 @@ func end_attack(target_grid_pos) -> void:
 		set_grid_pos(current_attack_cell.pos)
 	else:
 		current_state = self.State.MOVING_FROM_ENEMY
+		
 
 
 func _on_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
@@ -238,6 +259,7 @@ func hurt(dp):
 
 func die():
 	var next_player = get_closest_party_member()
+	
 	if !next_player:
 		Controller.game_over.emit()
 	else:

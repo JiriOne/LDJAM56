@@ -3,6 +3,10 @@ extends CharacterBody2D
 @onready var globalUtil = get_node("/root/GlobalUtil")
 @onready var healthBar = $CanvasGroup/HealthBar
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var attack_1: AudioStreamPlayer2D = $attack_1
+@onready var attack_3: AudioStreamPlayer2D = $attack_3
+@onready var attack_2: AudioStreamPlayer2D = $attack_2
+
 
 var grid_system
 @export var gridPosition : Vector2 = Vector2.ZERO
@@ -25,6 +29,15 @@ enum State {
 var current_state : State = State.IDLE
 
 func start_attack(target_grid_pos) -> void:
+	var rand_attack_sound = randi_range(0,2)
+	match rand_attack_sound:
+		0:
+			attack_1.play()
+		1:
+			attack_2.play()
+		2:
+			attack_3.play()
+			
 	pos_before_move = self.position
 	current_state = self.State.MOVING_TO_PLAYER
 	current_attack_cell = grid_system.get_cell_data(target_grid_pos)
@@ -40,6 +53,7 @@ func end_attack(target_grid_pos) -> void:
 		current_state = self.State.MOVING_FROM_PLAYER
 
 func set_grid_pos(pos) -> void:
+
 	# Remove from old cell in the grid system
 	var data_old : GridCellData = grid_system.get_cell_data(gridPosition)
 	data_old.has_enemy = false
