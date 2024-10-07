@@ -22,6 +22,7 @@ var available_targets : Array[Vector2]
 @onready var globalUtil = get_node("/root/GlobalUtil")
 @onready var controller = get_node("/root/Controller")
 @onready var animationPlayer = $AnimationPlayer
+@onready var health_bar: TextureProgressBar = $CanvasGroup/HealthBar
 
 var current_attack_cell : GridCellData
 var current_attack_pos : Vector2
@@ -52,20 +53,22 @@ func _ready() -> void:
 	var available_targets_text = movement_file.get_as_text()
 	available_targets = translate_targets(available_targets_text)
 
+# make player grey is turn_taken
+func _process(delta: float) -> void:
+	if turn_taken:
+		$CanvasGroup/Sprite2D.modulate = Color(0.5, 0.5, 0.5)
+	else:
+		$CanvasGroup/Sprite2D.modulate = Color(1, 1, 1)
+
 func _physics_process(delta: float) -> void:
 	
 	#check if close to player in party and if so, join the party
 	if self not in Controller.party:
-		var closest_party_member = null
-		var closest_party_member_dist = 99999999
 		
-		for member in Controller.party:
-			var tmp_dist = member.position.distance_to(self.position)
-			if tmp_dist < closest_party_member_dist and member != self:
-				closest_party_member = member
-				closest_party_member_dist = tmp_dist
+		var closest_party_member = get_closest_party_member()
 		
-		if closest_party_member_dist < 23:
+		
+		if closest_party_member and self.position.distance_to(closest_party_member.position) < 23:
 			Controller.party.append(self)
 			
 	
@@ -77,6 +80,18 @@ func _physics_process(delta: float) -> void:
 			if pos_before_move.distance_squared_to(position) < 0.01:
 				current_state = self.State.IDLE
 				turn_taken = true
+
+func get_closest_party_member() -> Player:
+	var closest_party_member = null
+	var closest_party_member_dist = 99999999
+	for member in Controller.party:
+		if member == self:
+			continue
+		var tmp_dist = member.position.distance_to(self.position)
+		if tmp_dist < closest_party_member_dist:
+			closest_party_member = member
+			closest_party_member_dist = tmp_dist
+	return closest_party_member
 
 func set_grid_pos(pos) -> void:
 	Controller.player_focused.emit(self)
@@ -196,15 +211,19 @@ func _on_attack_request(grid_pos) -> void:
 	start_attack(grid_pos)
 	hide_targets()
 	selected = false
-	
-# make player grey is turn_taken
-func _process(delta: float) -> void:
-	if self not in Controller.party:
-		self.modulate = Color(1.0,0.0,0.0)
+
+func hurt(dp):
+	hp = hp - dp
+	health_bar.value = hp
+	if hp <= 0:
+		self.die()
+
+func die():
+	var next_player = get_closest_party_member()
+	if !next_player:
+		Controller.game_over.emit()
 	else:
-		if turn_taken:
-			self.modulate = Color(0.5, 0.5, 0.5)
-		else:
-			self.modulate = Color(1, 1, 1)
-	
-	
+		Controller.player_focused.emit(next_player)
+		Controller.party.erase(self)
+		queue_free()
+

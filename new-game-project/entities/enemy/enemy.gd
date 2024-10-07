@@ -1,12 +1,13 @@
 extends CharacterBody2D
 
 @onready var globalUtil = get_node("/root/GlobalUtil")
-@onready var healthBar = $CanvasGroup/TextureProgressBar
+@onready var healthBar = $CanvasGroup/HealthBar
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 var grid_system
 @export var gridPosition : Vector2 = Vector2.ZERO
 @export var hp = 100
+@export var damage = 20
 var turn_taken : bool = false
 var rng = RandomNumberGenerator.new()
 var current_attack_cell : GridCellData
@@ -35,6 +36,7 @@ func end_attack(target_grid_pos) -> void:
 		current_state = self.State.IDLE
 		set_grid_pos(current_attack_cell.pos)
 	else:
+		current_attack_cell.player.hurt(damage)
 		current_state = self.State.MOVING_FROM_PLAYER
 
 func set_grid_pos(pos) -> void:
@@ -53,14 +55,8 @@ func _ready() -> void:
 	grid_system = get_parent()
 	grid_system.initialize()
 	position = globalUtil.grid_to_world(gridPosition)
-	generator_will_probably_do_this()
 	healthBar.value = hp
 	Controller.enemies.append(self)
-
-func generator_will_probably_do_this():
-	var data = grid_system.get_cell_data(gridPosition)
-	data.has_enemy = true
-	data.enemy = self
 
 func hurt(dp):
 	hp = hp - dp
