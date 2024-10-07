@@ -16,6 +16,7 @@ var grid_system
 @export var hp = 100
 
 var available_targets : Array[Vector2]
+@onready var on_screen_notifier = $VisibleOnScreenNotifier2D
 
 @onready var globalUtil = get_node("/root/GlobalUtil")
 @onready var controller = get_node("/root/Controller")

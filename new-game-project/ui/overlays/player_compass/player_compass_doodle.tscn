@@ -1,0 +1,50 @@
+[gd_scene load_steps=7 format=3 uid="uid://blbcts7koxmm5"]
+
+[ext_resource type="Texture2D" uid="uid://mka0sg7m2rlt" path="res://assets/ui/player_compass/doodle.png" id="1_28dj8"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_axmxh"]
+atlas = ExtResource("1_28dj8")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nkm60"]
+atlas = ExtResource("1_28dj8")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ada1g"]
+atlas = ExtResource("1_28dj8")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kbjoh"]
+atlas = ExtResource("1_28dj8")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_w8j7x"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_axmxh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nkm60")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ada1g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kbjoh")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="PlayerCompassDoodle" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 16.0
+offset_bottom = 16.0
+mouse_default_cursor_shape = 2
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(8, 8)
+sprite_frames = SubResource("SpriteFrames_w8j7x")

@@ -79,4 +79,8 @@ libraries = {
 "": SubResource("AnimationLibrary_r1oun")
 }
 
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(8.5, 8.5)
+scale = Vector2(0.25, 0.35)
+
 [connection signal="input_event" from="." to="." method="_on_input_event"]
