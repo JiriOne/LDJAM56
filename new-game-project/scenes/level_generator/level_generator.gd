@@ -3,6 +3,7 @@ extends Node2D
 @onready var grid_system = $"../GridSystem"
 @onready var tile_map_layer: TileMapLayer = $TileMapLayer
 var rng = RandomNumberGenerator.new()
+@onready var camera_2d: Camera2D = $"../Camera2D"
 
 
 func _create_water_puzzle(key_pos: Vector2):
@@ -59,7 +60,7 @@ func _manhattan_distance(a: Vector2, b: Vector2) -> float:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	await grid_system.grid_initialized
+	grid_system.initialize()
 	var location = Vector2(0,0)
 	randomize()
 	for i in range(100):	
@@ -113,6 +114,13 @@ func _ready() -> void:
 			#add random tiles to make the corridor look more interesting
 			for r in range(3):
 				tile_map_layer.set_cell(Vector2i(x, y+rng.randi_range(-2,2)), 0, Vector2i(3, 0))
+				
+			if rng.randf() < 0.1:
+				var enemy = preload("res://entities/enemy/enemy.tscn").instantiate()
+				print("la")
+				enemy.position = Vector2(x,y)*16 + Vector2(rng.randi_range(-3,3),rng.randi_range(-3,3))*16
+				enemy.gridPosition = enemy.position/16
+				grid_system.add_child(enemy)
 
 			if x < int(center_b.x):
 				x += 1
@@ -123,6 +131,14 @@ func _ready() -> void:
 
 			for r in range(3):
 				tile_map_layer.set_cell(Vector2i(x+rng.randi_range(-2,2), y), 0, Vector2i(3, 0))
+				
+			if rng.randf() < 0.1:
+				var enemy = preload("res://entities/enemy/enemy.tscn").instantiate()
+				print("la")
+				enemy.position = Vector2(x,y)*16 + Vector2(rng.randi_range(-3,3),rng.randi_range(-3,3))*16
+				enemy.gridPosition = enemy.position/16
+				grid_system.add_child(enemy)
+				
 			if y < int(center_b.y):
 				y += 1
 			else:
@@ -175,13 +191,18 @@ func _ready() -> void:
 						free = false
 			if free:
 				_create_dual_puzzle(key_pos/16)
-		
-		
 	
-	##TODO:
-		#"""
-		#- remve duplicate tiles
-		#"""
+	
+	for i in range(len(room_locations)):
+		var player = preload("res://entities/frog/frog.tscn").instantiate()
+		player.position = room_locations[i]*16 + round(room_sizes[i] / 2 + Vector2(rng.randi_range(-3,3), rng.randi_range(-3,3))) *16
+		player.gridPosition = player.position/16
+		if i == 0:
+			Controller.party.append(player)
+			camera_2d.focus_on_player(player)
+			
+		grid_system.add_child(player)
+		
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
