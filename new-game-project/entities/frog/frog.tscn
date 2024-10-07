@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://boafweukv20g8"]
+[gd_scene load_steps=8 format=3 uid="uid://boafweukv20g8"]
 
 [ext_resource type="Script" path="res://entities/frog/frog.gd" id="1_m2jcb"]
 [ext_resource type="Texture2D" uid="uid://dguk74mpplywb" path="res://assets/characters/frog/frog.png" id="2_dp5wq"]
+[ext_resource type="PackedScene" uid="uid://dwnslet3ys6ts" path="res://ui/stat_bars/progress/health_bar.tscn" id="3_bahxu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_axhhe"]
 size = Vector2(16, 16)
@@ -69,6 +70,9 @@ script = ExtResource("1_m2jcb")
 z_index = 1
 position = Vector2(8, 8)
 texture = ExtResource("2_dp5wq")
+
+[node name="HealthBar" parent="CanvasGroup" instance=ExtResource("3_bahxu")]
+value = 100.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(8, 8)
