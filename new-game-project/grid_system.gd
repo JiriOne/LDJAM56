@@ -1,21 +1,22 @@
 extends Node2D
 
-signal grid_initialized
+var initialized = false
 
 var grid: Array = []
 @export var grid_width: int = 10
 @export var grid_height: int = 10
 @export var grid_delta: int = 16
 
-func _ready() -> void:
+func initialize() -> void:
+	if initialized:
+		return
 	for i in grid_width:
 		grid.append([])
 		for j in grid_height:
 			var cell_data = GridCellData.new()
 			cell_data.pos = Vector2(i, j)
 			grid[i].append(cell_data)
-	grid_initialized.emit()
-
+	initialized = true
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
