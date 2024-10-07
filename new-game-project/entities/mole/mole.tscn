@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://cbk8txuwkh0dh"]
+[gd_scene load_steps=8 format=3 uid="uid://cbk8txuwkh0dh"]
 
 [ext_resource type="Script" path="res://entities/mole/mole.gd" id="1_sq1ob"]
 [ext_resource type="Texture2D" uid="uid://cbxo58xv3osuj" path="res://assets/characters/mole/mole.png" id="2_kbtto"]
+[ext_resource type="PackedScene" uid="uid://dwnslet3ys6ts" path="res://ui/stat_bars/progress/health_bar.tscn" id="3_o45hc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p03vg"]
 size = Vector2(16, 16)
@@ -71,6 +72,8 @@ attackDamage = 40
 z_index = 1
 position = Vector2(8, 8)
 texture = ExtResource("2_kbtto")
+
+[node name="HealthBar" parent="CanvasGroup" instance=ExtResource("3_o45hc")]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(8, 8)

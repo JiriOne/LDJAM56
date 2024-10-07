@@ -16,8 +16,8 @@ func _process(delta: float) -> void:
 		var center_to_player = player_doodles.get(doodle).position - get_viewport().get_camera_2d().get_screen_center_position()
 		var screen_width = get_viewport_rect().size.x
 		var screen_height = get_viewport_rect().size.y
-		var screen_edge_position = Vector2(screen_width / 2 + center_to_player.normalized().x * 130, screen_height / 2 + center_to_player.normalized().y * 80)
-		doodle.position = screen_edge_position
+		var screen_edge_position = Vector2(screen_width / 2 + center_to_player.normalized().x * 130, screen_height / 2 + center_to_player.normalized().y * 75)
+		doodle.position = screen_edge_position + Vector2(0, -8)
 		doodle.get_node("AnimatedSprite2D").frame = (2 if center_to_player.x < 0 else 0) + (1 if center_to_player.y > 0.01 else 0)
 
 func _on_player_screen_enter(ply : Player):
