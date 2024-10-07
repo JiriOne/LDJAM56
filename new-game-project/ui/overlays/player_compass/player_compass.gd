@@ -4,8 +4,8 @@ const player_compass_doodle = preload("res://ui/overlays/player_compass/player_c
 var player_doodles : Dictionary
 
 func _ready() -> void:
-	var party = Controller.party
-	for ply : Player in party:
+	var plys = get_tree().get_nodes_in_group("player_character")
+	for ply : Player in plys:
 		ply.on_screen_notifier.screen_entered.connect(_on_player_screen_enter.bind(ply))
 		ply.on_screen_notifier.screen_exited.connect(_on_player_screen_exit.bind(ply))
 
@@ -21,16 +21,18 @@ func _process(delta: float) -> void:
 		doodle.get_node("AnimatedSprite2D").frame = (2 if center_to_player.x < 0 else 0) + (1 if center_to_player.y > 0.01 else 0)
 
 func _on_player_screen_enter(ply : Player):
-	var doodle = player_doodles.find_key(ply)
-	if doodle:
-		player_doodles.erase(doodle)
-		doodle.queue_free()
+	if ply in Controller.party:
+		var doodle = player_doodles.find_key(ply)
+		if doodle:
+			player_doodles.erase(doodle)
+			doodle.queue_free()
 	
 func _on_player_screen_exit(ply : Player):
-	var doodle = player_compass_doodle.instantiate()
-	add_child(doodle)
-	doodle.gui_input.connect(_on_doodle_input.bind(ply))
-	player_doodles.get_or_add(doodle, ply)
+	if ply in Controller.party:
+		var doodle = player_compass_doodle.instantiate()
+		add_child(doodle)
+		doodle.gui_input.connect(_on_doodle_input.bind(ply))
+		player_doodles.get_or_add(doodle, ply)
 
 func _on_doodle_input(event : InputEvent, ply : Player) -> void:
 	if event is InputEventMouseButton:

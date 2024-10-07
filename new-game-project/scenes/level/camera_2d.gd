@@ -1,7 +1,7 @@
 extends Camera2D
 
 @export var max_player_dist = 0.5
-@export var move_speed = 150
+@export var move_speed = 300
 
 @onready var level: Node2D = $".."
 var focused_player : Player
