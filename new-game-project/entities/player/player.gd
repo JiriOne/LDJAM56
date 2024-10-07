@@ -4,6 +4,7 @@ class_name Player
 # -------- Interfaced Variables -----------
 var move_conditional : Callable
 var attack_conditional : Callable
+var movement_action : Callable
 var shadow_texture : CompressedTexture2D
 # -----------------------------------------
 
@@ -82,6 +83,7 @@ func set_grid_pos(pos) -> void:
 	# Remove from old cell in the grid system
 	var data_old : GridCellData = grid_system.get_cell_data(gridPosition)
 	data_old.has_player = false
+	
 	# Set world pos
 	self.position = globalUtil.grid_to_world(pos)
 	gridPosition = pos
@@ -89,6 +91,7 @@ func set_grid_pos(pos) -> void:
 	var data : GridCellData = grid_system.get_cell_data(pos)
 	data.has_player = true
 	data.player = self
+	
 	# Collect key
 	if data.has_key:
 		Controller.key_collected.emit()
@@ -97,6 +100,15 @@ func set_grid_pos(pos) -> void:
 	# Unlock door
 	if data.type == GlobalTypes.Cell_Type.DOOR:
 		grid_system.unlock_door(pos)
+	
+	if data.has_molshoop:
+		var otherMolshoopPos = data.molshoop.other_pos
+		self.position = globalUtil.grid_to_world(otherMolshoopPos)
+		gridPosition = otherMolshoopPos
+	
+	# Call actions if they are defined by the character
+	if movement_action:
+		movement_action.call(data_old, data)
 
 func translate_targets(available_targets_text) -> Array[Vector2]:
 	var lines : PackedStringArray = available_targets_text.split("\n", false)
