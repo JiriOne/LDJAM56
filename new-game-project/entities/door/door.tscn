@@ -1,15 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://c7004krehupyu"]
+[gd_scene load_steps=3 format=3 uid="uid://c7004krehupyu"]
 
 [ext_resource type="Script" path="res://entities/key/key.gd" id="1_np0rf"]
-[ext_resource type="Texture2D" uid="uid://dbfud5foh8se" path="res://assets/simple_tiles/simple_tiles.png" id="2_6rnki"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_caq8t"]
-atlas = ExtResource("2_6rnki")
-region = Rect2(64, 0, 16, 16)
+[ext_resource type="Texture2D" uid="uid://bq3axu0w846i7" path="res://assets/door/door.png" id="2_ovk38"]
 
 [node name="Door" type="Area2D"]
 script = ExtResource("1_np0rf")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(8, 8)
-texture = SubResource("AtlasTexture_caq8t")
+texture = ExtResource("2_ovk38")
