@@ -78,6 +78,7 @@ shape = SubResource("RectangleShape2D_axhhe")
 libraries = {
 "": SubResource("AnimationLibrary_r1oun")
 }
+speed_scale = 2.0
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
 position = Vector2(8.5, 8.5)

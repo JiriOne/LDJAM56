@@ -102,7 +102,10 @@ func _process(delta: float) -> void:
 		
 	if current_state == State.WALKING:
 		
-		set_grid_pos(gridPosition + Vector2(rng.randi_range(-1,1),rng.randi_range(-1,1)))
+		var rand_movement = Vector2(rng.randi_range(-1,1),rng.randi_range(-1,1))
+		var new_pos = gridPosition + rand_movement
+		if new_pos.x > 0 and new_pos.x < 50 and new_pos.y > 0 and new_pos.y < 50 and grid_system.get_cell_data(new_pos).type == GlobalTypes.Cell_Type.GROUND:
+			set_grid_pos(gridPosition + rand_movement)
 		
 		current_state = State.IDLE
 		turn_taken = true
@@ -133,7 +136,7 @@ func _process(delta: float) -> void:
 			
 			var cell_data = grid_system.get_cell_data(gridPosition + direction)
 			
-			if !cell_data.has_enemy and !cell_data.has_player and cell_data.type == GlobalTypes.Cell_Type.GROUND:	
+			if !cell_data.has_enemy and !cell_data.has_player and cell_data.type == GlobalTypes.Cell_Type.GROUND and cell_data.pos > Vector2(0,0) and cell_data.pos < Vector2(99,99):	
 				set_grid_pos(gridPosition + direction)
 			
 			current_state = State.IDLE

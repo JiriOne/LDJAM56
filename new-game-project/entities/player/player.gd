@@ -13,7 +13,7 @@ var grid_system
 
 @export var selected : bool = false
 @export var gridPosition : Vector2 = Vector2.ZERO
-@export var attackDamage = 15
+@export var attackDamage = 50
 @export var hp = 100
 
 var available_targets : Array[Vector2]
@@ -65,7 +65,7 @@ func _physics_process(delta: float) -> void:
 				closest_party_member = member
 				closest_party_member_dist = tmp_dist
 		
-		if closest_party_member_dist < 96:
+		if closest_party_member_dist < 23:
 			Controller.party.append(self)
 			
 	

@@ -94,3 +94,4 @@ shape = SubResource("RectangleShape2D_bsomm")
 libraries = {
 "": SubResource("AnimationLibrary_mu6ss")
 }
+speed_scale = 2.0
