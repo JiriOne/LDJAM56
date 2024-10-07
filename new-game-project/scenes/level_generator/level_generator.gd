@@ -89,15 +89,6 @@ func _ready() -> void:
 
 		room_locations.append(room_location)
 		room_sizes.append(room_size)
-		for x in range(room_size.x):
-			for y in range(room_size.y):
-				# Set the walls
-				if x == 0 or y == 0 or x == room_size.x - 1 or y == room_size.y - 1:
-					tile_map_layer.set_cell(Vector2i(room_location.x + x, room_location.y + y), 0, Vector2i(2, 0))
-					grid_system.set_cell_type(Vector2(room_location.x + x, room_location.y + y), GlobalTypes.Cell_Type.WALL)
-				else:
-					# Clear the inside of the room
-					tile_map_layer.set_cell(Vector2i(room_location.x + x, room_location.y + y), 0, Vector2i(1, 0))
 	
 	
 	#add straight corridors
@@ -117,7 +108,6 @@ func _ready() -> void:
 				
 			if rng.randf() < 0.1:
 				var enemy = preload("res://entities/enemy/enemy.tscn").instantiate()
-				print("la")
 				enemy.position = Vector2(x,y)*16 + Vector2(rng.randi_range(-3,3),rng.randi_range(-3,3))*16
 				enemy.gridPosition = enemy.position/16
 				grid_system.add_child(enemy)
@@ -134,7 +124,6 @@ func _ready() -> void:
 				
 			if rng.randf() < 0.1:
 				var enemy = preload("res://entities/enemy/enemy.tscn").instantiate()
-				print("la")
 				enemy.position = Vector2(x,y)*16 + Vector2(rng.randi_range(-3,3),rng.randi_range(-3,3))*16
 				enemy.gridPosition = enemy.position/16
 				grid_system.add_child(enemy)
@@ -143,17 +132,39 @@ func _ready() -> void:
 				y += 1
 			else:
 				y -= 1
-
-	for i in len(room_locations):
+	
+	const door_scene = preload("res://entities/door/door.tscn")
+	
+	# Create walls
+	for i in range(len(room_locations)):
 		var room_size = room_sizes[i]
+		# make the room far enough from the others
+		var room_location = room_locations[i]
 		for x in range(room_size.x):
-				for y in range(room_size.y):
-					# Set the walls
-					if x == 0 or y == 0 or x == room_size.x - 1 or y == room_size.y - 1:
-						tile_map_layer.set_cell(Vector2i(room_locations[i].x + x, room_locations[i].y + y), 0, Vector2i(2, 0))
-					else:
-						# Clear the inside of the room
-						tile_map_layer.set_cell(Vector2i(room_locations[i].x + x, room_locations[i].y + y), 0, Vector2i(1, 0))
+			for y in range(room_size.y):
+				# Set the walls
+				if x == 0 or y == 0 or x == room_size.x - 1 or y == room_size.y - 1:
+					tile_map_layer.set_cell(Vector2i(room_location.x + x, room_location.y + y), 0, Vector2i(2, 0))
+					grid_system.set_cell_type(Vector2(room_location.x + x, room_location.y + y), GlobalTypes.Cell_Type.WALL)
+				else:
+					# Clear the inside of the room
+					tile_map_layer.set_cell(Vector2i(room_location.x + x, room_location.y + y), 0, Vector2i(1, 0))
+		# Create key door
+		var random_pos_in_room = Vector2(randi_range(1, room_size.x - 1), randi_range(1, room_size.y - 1))
+		var wall_origins = [Vector2.ZERO, Vector2(room_size.x - 1, 0), Vector2(0, room_size.y - 1)]
+		var random_wall_origin = wall_origins.pick_random()
+		var random_wall_direction = Vector2.RIGHT
+		if random_wall_origin == Vector2.ZERO:
+			random_wall_direction = [Vector2.RIGHT, Vector2.DOWN].pick_random()
+		else:
+			random_wall_direction = random_wall_origin.orthogonal()
+		var door_pos = random_pos_in_room.project(random_wall_direction) + random_wall_origin
+		tile_map_layer.set_cell(Vector2i(room_location.x + door_pos.x, room_location.y + door_pos.y), 0, Vector2i(1, 0))
+		grid_system.set_cell_type(Vector2(room_location.x + door_pos.x, room_location.y + door_pos.y), GlobalTypes.Cell_Type.GROUND)
+		var door_entity = door_scene.instantiate()
+		door_entity.position = GlobalUtil.grid_to_world(room_location + door_pos)
+		grid_system.add_door(door_entity, room_location + door_pos)
+		grid_system.add_child(door_entity)
 	
 	#for i in len(room_locations):
 		#if rng.randf() < 0.3:
@@ -173,24 +184,27 @@ func _ready() -> void:
 		var key = preload("res://entities/key/key.tscn").instantiate()
 		
 		#add variation to the key position
-		var key_pos = room_locations[i]*16 + round(room_sizes[i] / 2) *16
-		key_pos += Vector2(rng.randi_range(-3,3)*16, rng.randi_range(-3,3)*16)
-		key.position = key_pos
+		var key_pos = room_locations[i] + round(room_sizes[i] / 2)
+		key_pos += Vector2(rng.randi_range(-3,3), rng.randi_range(-3,3))
+		key.position = GlobalUtil.grid_to_world(key_pos)
+		var cell_data = grid_system.get_cell_data(key_pos)
+		cell_data.has_key = true
+		cell_data.key = key
 		add_child(key)
 		
 		if i == 0 or rng.randf() < 0.2:
-			_create_water_puzzle(key_pos/16)
+			_create_water_puzzle(key_pos)
 		elif rng.randf() < 0.5:
-			_create_fence_puzzle(key_pos/16)
+			_create_fence_puzzle(key_pos)
 		#check for enough free tiles below
 		else:
 			var free = true
 			for k in range(-5,5):
 				for j in range(-5,5):
-					if tile_map_layer.get_cell_atlas_coords(Vector2(k,j) + key_pos/16) == Vector2i(2,0):
+					if tile_map_layer.get_cell_atlas_coords(Vector2(k,j) + key_pos) == Vector2i(2,0):
 						free = false
 			if free:
-				_create_dual_puzzle(key_pos/16)
+				_create_dual_puzzle(key_pos)
 	
 	
 	for i in range(len(room_locations)):

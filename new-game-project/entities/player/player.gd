@@ -82,7 +82,6 @@ func set_grid_pos(pos) -> void:
 	# Remove from old cell in the grid system
 	var data_old : GridCellData = grid_system.get_cell_data(gridPosition)
 	data_old.has_player = false
-	grid_system.update_cell(data_old)
 	# Set world pos
 	self.position = globalUtil.grid_to_world(pos)
 	gridPosition = pos
@@ -90,7 +89,14 @@ func set_grid_pos(pos) -> void:
 	var data : GridCellData = grid_system.get_cell_data(pos)
 	data.has_player = true
 	data.player = self
-	grid_system.update_cell(data)
+	# Collect key
+	if data.has_key:
+		Controller.key_collected.emit()
+		data.key.queue_free()
+		data.has_key = false
+	# Unlock door
+	if data.type == GlobalTypes.Cell_Type.DOOR:
+		grid_system.unlock_door(pos)
 
 func translate_targets(available_targets_text) -> Array[Vector2]:
 	var lines : PackedStringArray = available_targets_text.split("\n", false)
