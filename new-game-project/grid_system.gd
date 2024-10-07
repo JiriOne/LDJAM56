@@ -3,8 +3,8 @@ extends Node2D
 var initialized = false
 
 var grid: Array = []
-@export var grid_width: int = 10
-@export var grid_height: int = 10
+var grid_width: int = 50
+var grid_height: int = 50
 @export var grid_delta: int = 16
 
 func initialize() -> void:
@@ -52,8 +52,8 @@ func calc_valid_targets(origin, targets : Array[Vector2], conditional : Callable
 	for target in targets:
 		target = target + origin
 		if (target.x >= grid_width) or (target.y >= grid_height) or (target.x < 0) or (target.y < 0):
-			printerr("WARNING: Found calculating target outside of grid")
-			return []
+			continue
+			
 		var cell : GridCellData = get_cell_data(target)
 		if conditional.call(origin, cell, target):
 			result.append(cell)

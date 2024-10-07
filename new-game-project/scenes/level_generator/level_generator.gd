@@ -116,6 +116,8 @@ func _ready() -> void:
 				var enemy = preload("res://entities/enemy/enemy.tscn").instantiate()
 				enemy.position = Vector2(x,y)*16 + Vector2(rng.randi_range(-3,3),rng.randi_range(-3,3))*16
 				enemy.gridPosition = enemy.position/16
+				var cell = grid_system.get_cell_data(enemy.gridPosition)
+				cell.has_enemy = true
 				grid_system.add_child(enemy)
 
 			if x < int(center_b.x):
@@ -132,6 +134,8 @@ func _ready() -> void:
 				var enemy = preload("res://entities/enemy/enemy.tscn").instantiate()
 				enemy.position = Vector2(x,y)*16 + Vector2(rng.randi_range(-3,3),rng.randi_range(-3,3))*16
 				enemy.gridPosition = enemy.position/16
+				var cell = grid_system.get_cell_data(enemy.gridPosition)
+				cell.has_enemy = true
 				grid_system.add_child(enemy)
 				
 			if y < int(center_b.y):
@@ -166,13 +170,18 @@ func _ready() -> void:
 			random_wall_direction = random_wall_origin.orthogonal()
 		var door_pos = random_pos_in_room.project(random_wall_direction) + random_wall_origin
 		tile_map_layer.set_cell(Vector2i(room_location.x + door_pos.x, room_location.y + door_pos.y), 0, Vector2i(1, 0))
-		grid_system.set_cell_type(Vector2(room_location.x + door_pos.x, room_location.y + door_pos.y), GlobalTypes.Cell_Type.GROUND)
+		grid_system.set_cell_type(Vector2(room_location.x + door_pos.x, room_location.y + door_pos.y), GlobalTypes.Cell_Type.DOOR)
 		var door_entity = door_scene.instantiate()
 		door_entity.position = GlobalUtil.grid_to_world(room_location + door_pos)
 		grid_system.add_door(door_entity, room_location + door_pos)
 		grid_system.add_child(door_entity)
 	
-	
+	for i in range(10):
+		var heart = preload("res://entities/heart/heart.tscn").instantiate()
+		var heart_pos = Vector2(rng.randi_range(0,50),rng.randi_range(0,50))
+		heart.position = GlobalUtil.grid_to_world(heart_pos)
+		grid_system.add_child(heart)
+		
 	#generate key scene object
 	var key_positions = []
 	for i in range(len(room_locations)):
@@ -205,7 +214,7 @@ func _ready() -> void:
 			var close_to_key = false
 				
 			for other in key_positions:
-				if key_pos.distance_to(other) < 80:
+				if key_pos.distance_to(other) < 8:
 					close_to_key = true
 					break
 
@@ -213,13 +222,13 @@ func _ready() -> void:
 				key_pos = Vector2(rng.randi_range(10,40), rng.randi_range(10,40))
 				close_to_key = false
 				for other in key_positions:
-					if key_pos.distance_to(other) < 5:
+					if key_pos.distance_to(other) < 8:
 						close_to_key = true
 						
 			var close_to_room = false
 
 			for j in range(len(room_locations)):
-				if key_pos.distance_to(room_locations[j] + round(room_sizes[j] / 2)) < 6:
+				if key_pos.distance_to(room_locations[j] + round(room_sizes[j] / 2)) < 8:
 					close_to_room = true
 					break
 
@@ -227,8 +236,18 @@ func _ready() -> void:
 				key_pos = Vector2(rng.randi_range(10,40), rng.randi_range(10,40))
 				close_to_room = false
 				for j in range(len(room_locations)):
-					if key_pos.distance_to(room_locations[j] + round(room_sizes[j] / 2)) < 6:
+					if key_pos.distance_to(room_locations[j] + round(room_sizes[j] / 2)) < 8:
 						close_to_room = true
+						
+			var there_is_cat_here_ohno = false
+
+			if grid_system.get_cell_data(key_pos).has_enemy:
+				there_is_cat_here_ohno = true
+			
+			while there_is_cat_here_ohno:
+				key_pos = Vector2(rng.randi_range(10,40), rng.randi_range(10,40))
+				if grid_system.get_cell_data(key_pos).has_enemy:
+					there_is_cat_here_ohno = true
 						
 				
 			
@@ -240,11 +259,14 @@ func _ready() -> void:
 		cell_data.key = key
 		add_child(key)
 		
-		if i < 3:
+		if i == 0:
+			#no puzzle
+			var la = "makes no sense"
+		if i > 0 and i < 3:
 			_create_water_puzzle(key_pos)
-		elif i < 5:
+		elif i > 0 and i < 5:
 			_create_fence_puzzle(key_pos)
-		else:
+		elif i > 0:
 			_create_dual_puzzle(key_pos)
 	
 	
@@ -264,7 +286,18 @@ func _ready() -> void:
 			camera_2d.focus_on_player(player)
 			
 		grid_system.add_child(player)
-		
+	
+	for i in range(50):
+		for j in range(50):
+			if grid_system.get_cell_data(Vector2(i,j)).type != GlobalTypes.Cell_Type.DOOR:
+				if tile_map_layer.get_cell_atlas_coords(Vector2(i,j)) == Vector2i(1,0) or tile_map_layer.get_cell_atlas_coords(Vector2(i,j)) == Vector2i(3,0) :
+					grid_system.set_cell_type(Vector2(i,j), GlobalTypes.Cell_Type.GROUND)
+				elif tile_map_layer.get_cell_atlas_coords(Vector2(i,j)) == Vector2i(2,0):
+					grid_system.set_cell_type(Vector2(i,j), GlobalTypes.Cell_Type.WALL)
+				elif tile_map_layer.get_cell_atlas_coords(Vector2(i,j)) == Vector2i(0,0):
+					grid_system.set_cell_type(Vector2(i,j), GlobalTypes.Cell_Type.WATER)
+				elif tile_map_layer.get_cell_atlas_coords(Vector2(i,j)) == Vector2i(4,0):
+					grid_system.set_cell_type(Vector2(i,j), GlobalTypes.Cell_Type.FENCE)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

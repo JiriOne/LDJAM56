@@ -226,3 +226,4 @@ func die():
 		Controller.player_focused.emit(next_player)
 		Controller.party.erase(self)
 		queue_free()
+
